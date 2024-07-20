@@ -54,9 +54,8 @@ class CoverPainter(
 
     @Stable
     fun effectFactor(distanceToCenter: Float): Float {
-        return params.distanceFactor.calculateFactor(
-            coverSize,
-            distanceToCenter
+        return params.distanceFactor.factor(
+            distanceToCenter / coverSize
         )
     }
 
@@ -84,17 +83,17 @@ class CoverPainter(
  * This makes sure scaling doesn't destroy how it looks like.
  * All calculations are derived in the following steps:
  *  1. Determine the shorter edge of the CoverFlow composable box.
- *  2. Multiply it with the coverSizeRatio. This gives us the size of the cover in focus.
+ *  2. Use DistanceFactor to
  */
 @Immutable
 @Parcelize
 data class CoverFlowParams(
     val size: Float = .5f,
     val offset: Float = .5f,
+    val distanceFactor: @RawValue DistanceFactor = OffsetLinearDistanceFactor(),
     val angle: Float = 55f,
     val horizontalShift: Float = .5f,
     val zoom: Float = .8f,
-    val distanceFactor: @RawValue DistanceFactor = OffsetLinearDistanceFactor(),
 ) : Parcelable
 
 fun debugCoverFlowParams(): CoverFlowParams {
@@ -102,7 +101,7 @@ fun debugCoverFlowParams(): CoverFlowParams {
         size = .5f,
         offset = 1f,
         angle = 0f,
-        zoom = 1f,
         horizontalShift = 0f,
+        zoom = 1f,
     )
 }

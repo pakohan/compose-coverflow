@@ -1,10 +1,16 @@
 package com.pakohan.coverflow.coverflow
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import kotlin.math.round
 
 @Composable
 fun CoverFlowSettings(
@@ -12,22 +18,44 @@ fun CoverFlowSettings(
     params: CoverFlowParams,
     onParamsUpdate: (CoverFlowParams) -> Unit,
 ) {
+    var distanceRange by remember {
+        mutableStateOf(.0f..0.5f)
+    }
+
     Column(modifier = modifier) {
-        Text("Size: ${params.size}")
+        Text("Size: ${params.size.round(2)}")
         Slider(
             value = params.size,
             onValueChange = { onParamsUpdate(params.copy(size = it)) },
             steps = 100
         )
 
-        Text("Offset: ${params.offset}")
+        Text("Offset: ${params.offset.round(2)}")
         Slider(
             value = params.offset,
             onValueChange = { onParamsUpdate(params.copy(offset = it)) },
             steps = 100
         )
 
-        Text("Angle: ${params.angle}")
+        Text("Distance: $distanceRange")
+        RangeSlider(
+            value = distanceRange,
+            onValueChange = {
+                distanceRange = it
+                onParamsUpdate(
+                    params.copy(
+                        distanceFactor = OffsetLinearDistanceFactor(
+                            distanceRange.start,
+                            distanceRange.endInclusive
+                        )
+                    )
+                )
+            },
+            steps = 100,
+            valueRange = 0f..2f,
+        )
+
+        Text("Angle: ${params.angle.round(2)}")
         Slider(
             value = params.angle,
             onValueChange = { onParamsUpdate(params.copy(angle = it)) },
@@ -35,20 +63,24 @@ fun CoverFlowSettings(
             valueRange = 0f..90f
         )
 
-        Text("Horizontal shift: ${params.horizontalShift}")
+        Text("Horizontal shift: ${params.horizontalShift.round(2)}")
         Slider(
             value = params.horizontalShift,
             onValueChange = { onParamsUpdate(params.copy(horizontalShift = it)) },
             steps = 100,
-            valueRange = 0f..1f
         )
 
-        Text("Zoom: ${params.zoom}")
+        Text("Zoom: ${params.zoom.round(2)}")
         Slider(
             value = params.zoom,
             onValueChange = { onParamsUpdate(params.copy(zoom = it)) },
             steps = 100,
-            valueRange = 0f..1f
         )
     }
+}
+
+fun Float.round(decimals: Int): Float {
+    var multiplier = 1.0
+    repeat(decimals) { multiplier *= 10 }
+    return (round(this * multiplier) / multiplier).toFloat()
 }
