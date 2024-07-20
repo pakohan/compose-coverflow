@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     id("org.jetbrains.dokka") version "1.9.20"
-    alias(libs.plugins.android.library) apply false
 }
 
 tasks.dokkaHtmlMultiModule {
