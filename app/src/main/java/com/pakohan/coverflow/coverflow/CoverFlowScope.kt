@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 class CoverFlowScope(
     internal val painter: Geometry,
     internal val lazyListScope: LazyListScope,
-    internal val onClickHandler: (index: Int) -> Unit,
+    internal val coverFlowState: CoverFlowState,
 ) {
     fun <T> items(
         items: List<T>,
@@ -21,8 +21,11 @@ class CoverFlowScope(
         contentType
     ) {
         Cover(
-            onClickHandler = { onClickHandler(it) },
-            onSelectedHandler = { onSelectHandler(items[it]) },
+            onClickHandler = { coverFlowState.scrollToItem(it) },
+            onSelectedHandler = {
+                coverFlowState.selectedIndex = it
+                onSelectHandler(items[it])
+            },
             painter = painter,
         ) {
             itemContent(items[it])
@@ -41,8 +44,11 @@ class CoverFlowScope(
         contentType
     ) {
         Cover(
-            onClickHandler = { onClickHandler(it) },
-            onSelectedHandler = { onSelectHandler(it) },
+            onClickHandler = { coverFlowState.scrollToItem(it) },
+            onSelectedHandler = {
+                coverFlowState.selectedIndex = it
+                onSelectHandler(it)
+            },
             painter = painter,
         ) {
             itemContent(it)
