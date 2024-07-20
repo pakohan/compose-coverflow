@@ -71,7 +71,7 @@ class Geometry(
 
     @Stable
     internal fun translationX(distanceToCenter: Float): Float {
-        return coverSize * params.horizontalShift * effectFactor(distanceToCenter)
+        return coverOffset * params.horizontalShift * effectFactor(distanceToCenter)
     }
 }
 
