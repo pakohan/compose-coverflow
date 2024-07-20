@@ -1,4 +1,4 @@
-package com.pakohan.coverflow.coverflow
+package com.pakohan.coverflow
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior

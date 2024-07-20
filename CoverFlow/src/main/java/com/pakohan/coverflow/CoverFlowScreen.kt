@@ -1,4 +1,4 @@
-package com.pakohan.coverflow.coverflow
+package com.pakohan.coverflow
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background

@@ -1,4 +1,4 @@
-package com.pakohan.coverflow.coverflow
+package com.pakohan.coverflow
 
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable

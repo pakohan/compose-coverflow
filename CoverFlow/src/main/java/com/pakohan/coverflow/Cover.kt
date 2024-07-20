@@ -1,4 +1,4 @@
-package com.pakohan.coverflow.coverflow
+package com.pakohan.coverflow
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
