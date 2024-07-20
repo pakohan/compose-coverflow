@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 
 class CoverFlowScope(
-    internal val painter: CoverPainter,
+    internal val painter: Geometry,
     internal val lazyListScope: LazyListScope,
     internal val onClickHandler: (index: Int) -> Unit,
 ) {

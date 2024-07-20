@@ -42,7 +42,7 @@ fun CoverFlow(
         flingBehavior = rememberSnapFlingBehavior(lazyListState = state)
     ) {
         if (size != IntSize.Zero) {
-            val painter = CoverPainter(
+            val painter = Geometry(
                 params,
                 size
             )

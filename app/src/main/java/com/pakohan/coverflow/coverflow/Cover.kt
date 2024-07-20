@@ -19,7 +19,7 @@ import kotlin.math.abs
 
 @Composable
 internal fun Cover(
-    painter: CoverPainter,
+    painter: Geometry,
     onClickHandler: () -> Unit = {},
     onSelectedHandler: () -> Unit,
     content: @Composable () -> Unit,

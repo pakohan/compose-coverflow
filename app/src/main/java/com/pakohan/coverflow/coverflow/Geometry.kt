@@ -11,7 +11,7 @@ import kotlin.math.min
 
 @Immutable
 @Stable
-class CoverPainter(
+class Geometry(
     private val params: CoverFlowParams = CoverFlowParams(),
     private val size: IntSize = IntSize.Zero,
 ) {
@@ -96,6 +96,10 @@ data class CoverFlowParams(
     val zoom: Float = .8f,
 ) : Parcelable
 
+/**
+ * For debugging. Sets the Parameters to values so that we get a normal LazyList without any
+ * CoverFlow effects.
+ */
 fun debugCoverFlowParams(): CoverFlowParams {
     return CoverFlowParams(
         size = .5f,
