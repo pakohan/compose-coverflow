@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,14 +16,15 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import com.pakohan.coverflow.coverflow.CoverFlow
 import com.pakohan.coverflow.coverflow.CoverFlowParams
 import com.pakohan.coverflow.coverflow.CoverFlowSettings
@@ -61,10 +63,18 @@ class MainActivity : ComponentActivity() {
                             params = params,
                             modifier = Modifier.background(Color.Black)
                         ) {
-                            items(20) {
-                                Surface(
-                                    modifier = Modifier.background(Color.Blue)
-                                ) {}
+                            items(
+                                listOf(
+                                    R.drawable.square,
+                                    R.drawable.horizontal,
+                                    R.drawable.vertical
+                                )
+                            ) {
+                                Image(
+                                    painter = painterResource(it),
+                                    alignment = Alignment.BottomCenter,
+                                    contentDescription = null
+                                )
                             }
                         }
                     }
