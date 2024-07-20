@@ -1,14 +1,16 @@
 package com.pakohan.coverflow.coverflow
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -19,40 +21,56 @@ import kotlin.math.abs
 
 @Composable
 internal fun Cover(
-    painter: Geometry,
+    geometry: Geometry,
     onClickHandler: () -> Unit = {},
     onSelectedHandler: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    var horizontalPosition by remember {
-        mutableStateOf<Float?>(null)
-    }
+    var horizontalPosition by remember { mutableStateOf<Float?>(null) }
+    val distanceToCenter = geometry.distanceToCenter(horizontalPosition ?: 0f)
 
-    val distanceToCenter = painter.distanceToCenter(horizontalPosition ?: 0f)
-    Box(modifier = Modifier
-        .size(with(LocalDensity.current) { painter.coverOffset.toDp() })
-        .zIndex(1f - abs(distanceToCenter))
-        .onGloballyPositioned { coordinates ->
-            horizontalPosition = coordinates.positionInParent().x
-        }) {
+    // This box is used to space the elements horizontally and to give them the proper z index.
+    Box(
+        modifier = Modifier
+            .width(with(LocalDensity.current) { geometry.coverOffset.toDp() })
+            .zIndex(1f - abs(distanceToCenter))
+            .onGloballyPositioned { coordinates ->
+                horizontalPosition = coordinates.positionInParent().x
+            },
+        contentAlignment = Alignment.Center
+    ) {
         // this makes sure that the cover only gets painted after we got the proper horizontal position.
         if (horizontalPosition != null) {
-            if (painter.isSelected(horizontalPosition ?: 0f)) {
+
+            // we use geometry to check whether an element is selected. That is if it's in the
+            // center. TODO: unselect element during scrolling
+            if (geometry.isSelected(horizontalPosition ?: 0f)) {
                 onSelectedHandler()
             }
 
-            Surface(
+            // This Box applies the transformation effects: rotation, horizontal shift, and zoom
+            Box(
                 modifier = Modifier
-                    .requiredSize(with(LocalDensity.current) { painter.coverSize.toDp() })
+                    .requiredSize(with(LocalDensity.current) { geometry.coverSize.toDp() })
                     .graphicsLayer(
-                        rotationY = painter.rotation(distanceToCenter),
-                        translationX = painter.translationX(distanceToCenter),
-                        scaleY = painter.scale(distanceToCenter),
-                        scaleX = painter.scale(distanceToCenter),
+                        rotationY = geometry.rotation(distanceToCenter),
+                        translationX = geometry.translationX(distanceToCenter),
+                        scaleY = geometry.scale(distanceToCenter),
+                        scaleX = geometry.scale(distanceToCenter),
                     ),
-                onClick = onClickHandler
+                propagateMinConstraints = true
             ) {
-                content()
+                val interactionSource = remember { MutableInteractionSource() }
+                Mirror(
+                    modifier = Modifier.clickable(
+                        interactionSource = interactionSource,
+                        indication = null,
+                        onClick = onClickHandler
+                    ),
+                    coverSize = geometry.coverSize
+                ) {
+                    content()
+                }
             }
         }
     }

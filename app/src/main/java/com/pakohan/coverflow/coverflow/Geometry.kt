@@ -43,6 +43,10 @@ class Geometry(
         get() = containerCenter - coverOffset / 2
 
     @Stable
+    internal val spacerHeight
+        get() = coverOffset / 2
+
+    @Stable
     internal fun isSelected(horizontalPosition: Float): Boolean {
         return (distanceToCenter(horizontalPosition) * 100).toInt() == 0
     }

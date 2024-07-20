@@ -46,7 +46,7 @@ fun CoverFlow(
             coverFlowState.geometry = geometry
 
             val coverFlowScope = CoverFlowScope(
-                painter = geometry,
+                geometry = geometry,
                 lazyListScope = this,
                 coverFlowState = coverFlowState
             )
