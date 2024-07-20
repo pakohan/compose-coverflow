@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.unit.IntSize
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -15,15 +16,19 @@ class CoverPainter(
     private val size: IntSize = IntSize.Zero,
 ) {
     @Stable
-    val mainCoverSize
-        get() = (min(
+    private val shortEdge
+        get() = min(
             size.width,
             size.height
-        ) * params.selectedElementHeightRatio).toInt()
+        )
+
+    @Stable
+    val coverSize
+        get() = shortEdge * params.size
 
     @Stable
     val coverOffset
-        get() = (mainCoverSize * params.elementsOffsetHeightFactor).toInt()
+        get() = (coverSize * params.offset).toInt()
 
     @Stable
     val spacerWidth
@@ -34,66 +39,70 @@ class CoverPainter(
         get() = size.width / 2
 
     @Stable
-    private val distanceBreakpoint
-        get() = coverOffset.toFloat() * params.distanceBreakpointRatio
+    private val zoomDelta
+        get() = 1 - params.zoom
 
     @Stable
     fun isSelected(horizontalPosition: Float): Boolean {
-        return (calculateDistanceToCenter(horizontalPosition) * 100).toInt() == 0
+        return (distanceToCenter(horizontalPosition) * 100).toInt() == 0
     }
 
     @Stable
-    fun calculateDistanceToCenter(horizontalPosition: Float): Float {
+    fun distanceToCenter(horizontalPosition: Float): Float {
         return horizontalPosition + coverOffset * .5f - containerCenter
     }
 
     @Stable
-    fun rotation(distanceToCenter: Float): Float {
-        return calculateDistanceToCenterFactor(distanceToCenter) * params.maxAngleDegrees
+    fun effectFactor(distanceToCenter: Float): Float {
+        return params.distanceFactor.calculateFactor(
+            coverSize,
+            distanceToCenter
+        )
     }
 
     @Stable
-    fun zoom(distanceToCenter: Float): Float {
-        return 1f + params.selectedElementAdditionalScale * (1 - abs(calculateDistanceToCenterFactor(distanceToCenter)))
+    fun rotation(distanceToCenter: Float): Float {
+        return -effectFactor(distanceToCenter) * params.angle
+    }
+
+    @Stable
+    fun scale(distanceToCenter: Float): Float {
+        return 1 - zoomDelta * abs(
+            effectFactor(distanceToCenter)
+        )
     }
 
     @Stable
     fun translationX(distanceToCenter: Float): Float {
-        return -calculateDistanceToCenterFactor(distanceToCenter) * coverOffset * params.horizontalTranslationRatio
-    }
-
-    @Stable
-    private fun calculateDistanceToCenterFactor(
-        relative: Float,
-    ): Float {
-        return if (relative < -distanceBreakpoint) {
-            1f
-        } else if (relative > distanceBreakpoint) {
-            -1f
-        } else {
-            -relative / distanceBreakpoint
-        }
+        return effectFactor(distanceToCenter) * coverOffset * params.horizontalShift
     }
 }
 
+/**
+ * params for configuring the coverflow composable.
+ * all relevant values are relativ to the dimensions of the CoverFlow composable.
+ * This makes sure scaling doesn't destroy how it looks like.
+ * All calculations are derived in the following steps:
+ *  1. Determine the shorter edge of the CoverFlow composable box.
+ *  2. Multiply it with the coverSizeRatio. This gives us the size of the cover in focus.
+ */
 @Immutable
 @Parcelize
 data class CoverFlowParams(
-    val maxAngleDegrees: Float = 55f,
-    val selectedElementAdditionalScale: Float = .3f,
-    val selectedElementHeightRatio: Float = .5f,
-    val elementsOffsetHeightFactor: Float = .5f,
-    val distanceBreakpointRatio: Float = 1f,
-    val horizontalTranslationRatio: Float = .5f,
+    val size: Float = .5f,
+    val offset: Float = .5f,
+    val angle: Float = 55f,
+    val horizontalShift: Float = .5f,
+    val zoom: Float = .8f,
+    val distanceFactor: @RawValue DistanceFactor = OffsetLinearDistanceFactor(),
 ) : Parcelable
 
 fun debugCoverFlowParams(): CoverFlowParams {
     return CoverFlowParams(
-        maxAngleDegrees = 0f,
-        selectedElementAdditionalScale = 0f,
-        selectedElementHeightRatio = .5f,
-        elementsOffsetHeightFactor = 1f,
-        distanceBreakpointRatio = 1f,
-        horizontalTranslationRatio = 0f,
+        size = .5f,
+        offset = 1f,
+        angle = 0f,
+        zoom = 1f,
+        horizontalShift = 0f,
     )
 }

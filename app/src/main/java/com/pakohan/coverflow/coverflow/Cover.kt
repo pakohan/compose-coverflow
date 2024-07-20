@@ -27,7 +27,8 @@ internal fun Cover(
     var horizontalPosition by remember {
         mutableFloatStateOf(0f)
     }
-    val distanceToCenter = painter.calculateDistanceToCenter(horizontalPosition)
+    val distanceToCenter = painter.distanceToCenter(horizontalPosition)
+
 
     Box(modifier = Modifier
         .size(with(LocalDensity.current) { painter.coverOffset.toDp() })
@@ -42,12 +43,12 @@ internal fun Cover(
 
         Surface(
             modifier = Modifier
-                .requiredSize(with(LocalDensity.current) { painter.mainCoverSize.toDp() })
+                .requiredSize(with(LocalDensity.current) { painter.coverSize.toDp() })
                 .graphicsLayer(
                     rotationY = painter.rotation(distanceToCenter),
-                    scaleY = painter.zoom(distanceToCenter),
-                    scaleX = painter.zoom(distanceToCenter),
                     translationX = painter.translationX(distanceToCenter),
+                    scaleY = painter.scale(distanceToCenter),
+                    scaleX = painter.scale(distanceToCenter),
                 ),
             onClick = onClickHandler
         ) {

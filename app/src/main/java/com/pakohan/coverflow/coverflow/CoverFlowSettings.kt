@@ -13,50 +13,42 @@ fun CoverFlowSettings(
     onParamsUpdate: (CoverFlowParams) -> Unit,
 ) {
     Column(modifier = modifier) {
-        Text("height ratio: ${params.selectedElementHeightRatio}")
+        Text("Size: ${params.size}")
         Slider(
-            value = params.selectedElementHeightRatio,
-            onValueChange = { onParamsUpdate(params.copy(selectedElementHeightRatio = it)) },
+            value = params.size,
+            onValueChange = { onParamsUpdate(params.copy(size = it)) },
             steps = 100
         )
 
-        Text("angle: ${params.maxAngleDegrees}")
+        Text("Offset: ${params.offset}")
         Slider(
-            value = params.maxAngleDegrees,
-            onValueChange = { onParamsUpdate(params.copy(maxAngleDegrees = it)) },
+            value = params.offset,
+            onValueChange = { onParamsUpdate(params.copy(offset = it)) },
+            steps = 100
+        )
+
+        Text("Angle: ${params.angle}")
+        Slider(
+            value = params.angle,
+            onValueChange = { onParamsUpdate(params.copy(angle = it)) },
             steps = 90,
             valueRange = 0f..90f
         )
 
-        Text("zoom factor: ${params.selectedElementAdditionalScale}")
+        Text("Horizontal shift: ${params.horizontalShift}")
         Slider(
-            value = params.selectedElementAdditionalScale,
-            onValueChange = { onParamsUpdate(params.copy(selectedElementAdditionalScale = it)) },
+            value = params.horizontalShift,
+            onValueChange = { onParamsUpdate(params.copy(horizontalShift = it)) },
             steps = 100,
-            valueRange = 0f..3f
+            valueRange = 0f..1f
         )
 
-        Text("offset factor: ${params.elementsOffsetHeightFactor}")
+        Text("Zoom: ${params.zoom}")
         Slider(
-            value = params.elementsOffsetHeightFactor,
-            onValueChange = { onParamsUpdate(params.copy(elementsOffsetHeightFactor = it)) },
-            steps = 100
-        )
-
-        Text("breakpoint ratio: ${params.distanceBreakpointRatio}")
-        Slider(
-            value = params.distanceBreakpointRatio,
-            onValueChange = { onParamsUpdate(params.copy(distanceBreakpointRatio = it)) },
+            value = params.zoom,
+            onValueChange = { onParamsUpdate(params.copy(zoom = it)) },
             steps = 100,
-            valueRange = .2f..5f
-        )
-
-        Text("translation ratio: ${params.horizontalTranslationRatio}")
-        Slider(
-            value = params.horizontalTranslationRatio,
-            onValueChange = { onParamsUpdate(params.copy(horizontalTranslationRatio = it)) },
-            steps = 100,
-            valueRange = 0f..100f
+            valueRange = 0f..1f
         )
     }
 }
