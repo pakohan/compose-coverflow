@@ -22,9 +22,12 @@ class CoverFlowScope(
     ) {
         Cover(
             onClickHandler = { coverFlowState.scrollToItem(it) },
-            onSelectedHandler = {
-                if (coverFlowState.selectedIndex != it) {
-                    coverFlowState.selectedIndex = it
+            onSelectedHandler = { isSelected: Boolean ->
+                if (selectHandler(
+                        it,
+                        isSelected
+                    )
+                ) {
                     onSelectHandler(items[it])
                 }
             },
@@ -47,9 +50,12 @@ class CoverFlowScope(
     ) {
         Cover(
             onClickHandler = { coverFlowState.scrollToItem(it) },
-            onSelectedHandler = {
-                if (coverFlowState.selectedIndex != it) {
-                    coverFlowState.selectedIndex = it
+            onSelectedHandler = { isSelected: Boolean ->
+                if (selectHandler(
+                        it,
+                        isSelected
+                    )
+                ) {
                     onSelectHandler(it)
                 }
             },
@@ -57,5 +63,19 @@ class CoverFlowScope(
         ) {
             itemContent(it)
         }
+    }
+
+    private fun selectHandler(
+        index: Int,
+        isSelected: Boolean,
+    ): Boolean {
+        if (!isSelected && index == coverFlowState.selectedIndex) {
+            coverFlowState.selectedIndex = -1
+        } else if (isSelected && index != coverFlowState.selectedIndex) {
+            coverFlowState.selectedIndex = index
+            return true
+        }
+
+        return false
     }
 }

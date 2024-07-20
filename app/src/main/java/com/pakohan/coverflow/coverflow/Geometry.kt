@@ -48,7 +48,7 @@ class Geometry(
 
     @Stable
     internal fun isSelected(horizontalPosition: Float): Boolean {
-        return (distanceToCenter(horizontalPosition) * 100).toInt() == 0
+        return distanceToCenter(horizontalPosition).toInt() == 0
     }
 
     @Stable

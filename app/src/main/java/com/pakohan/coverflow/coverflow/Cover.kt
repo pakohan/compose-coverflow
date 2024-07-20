@@ -23,7 +23,7 @@ import kotlin.math.abs
 internal fun Cover(
     geometry: Geometry,
     onClickHandler: () -> Unit = {},
-    onSelectedHandler: () -> Unit,
+    onSelectedHandler: (Boolean) -> Unit,
     content: @Composable () -> Unit,
 ) {
     var horizontalPosition by remember { mutableStateOf<Float?>(null) }
@@ -43,10 +43,8 @@ internal fun Cover(
         if (horizontalPosition != null) {
 
             // we use geometry to check whether an element is selected. That is if it's in the
-            // center. TODO: unselect element during scrolling
-            if (geometry.isSelected(horizontalPosition ?: 0f)) {
-                onSelectedHandler()
-            }
+            // center.
+            onSelectedHandler(geometry.isSelected(horizontalPosition ?: 0f))
 
             // This Box applies the transformation effects: rotation, horizontal shift, and zoom
             Box(
