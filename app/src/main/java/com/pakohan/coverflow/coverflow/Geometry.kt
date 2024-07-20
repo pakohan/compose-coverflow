@@ -23,15 +23,15 @@ class Geometry(
         )
 
     @Stable
-    val coverSize
+    internal val coverSize
         get() = shortEdge * params.size
 
     @Stable
-    val coverOffset
+    internal val coverOffset
         get() = (coverSize * params.offset).toInt()
 
     @Stable
-    val spacerWidth
+    internal val spacerWidth
         get() = containerCenter - coverOffset / 2
 
     @Stable
@@ -43,36 +43,36 @@ class Geometry(
         get() = 1 - params.zoom
 
     @Stable
-    fun isSelected(horizontalPosition: Float): Boolean {
+    internal fun isSelected(horizontalPosition: Float): Boolean {
         return (distanceToCenter(horizontalPosition) * 100).toInt() == 0
     }
 
     @Stable
-    fun distanceToCenter(horizontalPosition: Float): Float {
+    internal fun distanceToCenter(horizontalPosition: Float): Float {
         return horizontalPosition + coverOffset * .5f - containerCenter
     }
 
     @Stable
-    fun effectFactor(distanceToCenter: Float): Float {
+    internal fun effectFactor(distanceToCenter: Float): Float {
         return params.distanceFactor.factor(
             distanceToCenter / coverSize
         )
     }
 
     @Stable
-    fun rotation(distanceToCenter: Float): Float {
+    internal fun rotation(distanceToCenter: Float): Float {
         return -effectFactor(distanceToCenter) * params.angle
     }
 
     @Stable
-    fun scale(distanceToCenter: Float): Float {
+    internal fun scale(distanceToCenter: Float): Float {
         return 1 - zoomDelta * abs(
             effectFactor(distanceToCenter)
         )
     }
 
     @Stable
-    fun translationX(distanceToCenter: Float): Float {
+    internal fun translationX(distanceToCenter: Float): Float {
         return effectFactor(distanceToCenter) * coverOffset * params.horizontalShift
     }
 }
