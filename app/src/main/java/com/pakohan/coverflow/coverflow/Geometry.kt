@@ -23,6 +23,14 @@ class Geometry(
         )
 
     @Stable
+    private val containerCenter
+        get() = size.width / 2
+
+    @Stable
+    private val zoomDelta
+        get() = 1 - params.zoom
+
+    @Stable
     internal val coverSize
         get() = shortEdge * params.size
 
@@ -33,14 +41,6 @@ class Geometry(
     @Stable
     internal val spacerWidth
         get() = containerCenter - coverOffset / 2
-
-    @Stable
-    private val containerCenter
-        get() = size.width / 2
-
-    @Stable
-    private val zoomDelta
-        get() = 1 - params.zoom
 
     @Stable
     internal fun isSelected(horizontalPosition: Float): Boolean {
@@ -61,19 +61,17 @@ class Geometry(
 
     @Stable
     internal fun rotation(distanceToCenter: Float): Float {
-        return -effectFactor(distanceToCenter) * params.angle
+        return -params.angle * effectFactor(distanceToCenter)
     }
 
     @Stable
     internal fun scale(distanceToCenter: Float): Float {
-        return 1 - zoomDelta * abs(
-            effectFactor(distanceToCenter)
-        )
+        return 1 - zoomDelta * abs(effectFactor(distanceToCenter))
     }
 
     @Stable
     internal fun translationX(distanceToCenter: Float): Float {
-        return effectFactor(distanceToCenter) * coverOffset * params.horizontalShift
+        return coverSize * params.horizontalShift * effectFactor(distanceToCenter)
     }
 }
 
@@ -89,10 +87,10 @@ class Geometry(
 @Parcelize
 data class CoverFlowParams(
     val size: Float = .5f,
-    val offset: Float = .5f,
+    val offset: Float = .4f,
     val distanceFactor: @RawValue DistanceFactor = OffsetLinearDistanceFactor(),
     val angle: Float = 55f,
-    val horizontalShift: Float = .5f,
+    val horizontalShift: Float = .4f,
     val zoom: Float = .8f,
 ) : Parcelable
 
