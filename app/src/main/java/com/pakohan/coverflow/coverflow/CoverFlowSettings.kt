@@ -1,6 +1,10 @@
 package com.pakohan.coverflow.coverflow
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -9,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlin.math.round
 
@@ -76,6 +81,17 @@ fun CoverFlowSettings(
             onValueChange = { onParamsUpdate(params.copy(zoom = it)) },
             steps = 100,
         )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Mirror:")
+            Spacer(modifier = Modifier.weight(1f))
+            Checkbox(
+                checked = params.mirror,
+                onCheckedChange = { onParamsUpdate(params.copy(mirror = it)) },
+            )
+        }
     }
 }
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,15 +60,27 @@ internal fun Cover(
                 propagateMinConstraints = true
             ) {
                 val interactionSource = remember { MutableInteractionSource() }
-                Mirror(
-                    modifier = Modifier.clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        onClick = onClickHandler
-                    ),
-                    coverSize = geometry.coverSize
-                ) {
-                    content()
+                if (geometry.params.mirror) {
+                    Mirror(
+                        modifier = Modifier.clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                            onClick = onClickHandler
+                        ),
+                        coverSize = geometry.coverSize
+                    ) {
+                        content()
+                    }
+                } else {
+                    Surface(
+                        modifier = Modifier.clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                            onClick = onClickHandler
+                        ),
+                    ) {
+                        content()
+                    }
                 }
             }
         }

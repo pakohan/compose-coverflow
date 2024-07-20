@@ -12,7 +12,7 @@ import kotlin.math.min
 @Immutable
 @Stable
 class Geometry(
-    private val params: CoverFlowParams = CoverFlowParams(),
+    internal val params: CoverFlowParams = CoverFlowParams(),
     private val size: IntSize = IntSize.Zero,
 ) {
     @Stable
@@ -96,6 +96,7 @@ data class CoverFlowParams(
     val angle: Float = 55f,
     val horizontalShift: Float = .4f,
     val zoom: Float = .8f,
+    val mirror: Boolean = true,
 ) : Parcelable
 
 /**
@@ -109,5 +110,6 @@ fun debugCoverFlowParams(): CoverFlowParams {
         angle = 0f,
         horizontalShift = 0f,
         zoom = 1f,
+        mirror = false
     )
 }
