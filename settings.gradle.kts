@@ -20,5 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "CoverFlow"
-include(":app")
 include(":CoverFlow")
