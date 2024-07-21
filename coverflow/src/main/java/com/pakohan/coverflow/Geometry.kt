@@ -76,12 +76,20 @@ internal class Geometry(
 }
 
 /**
- * params for configuring the coverflow composable.
- * all relevant values are relativ to the dimensions of the CoverFlow composable.
- * This makes sure scaling doesn't destroy how it looks like.
- * All calculations are derived in the following steps:
- *  1. Determine the shorter edge of the CoverFlow composable box.
- *  2. Use DistanceFactor to
+ * Params for configuring the coverflow composable.
+ *
+ * All relevant values are relativ to the dimensions of the CoverFlow composable to make it responsive.
+ * It is based on the shorter of the two sides of the outer component.
+ *
+ * @param size is multiplied with that edge to get the cover size in the middle.
+ * @param offset is multiplied with that edge to get the distance between two covers in the list.
+ * @param distanceFactor calculates how strong the transformations are applied to covers depending
+ * on their distance to the center.
+ * @param angle is the maximum rotation angle.
+ * @param shift is the horizontal shift of the items away from the center. Useful for giving the
+ * center element more space.
+ * @param zoom makes the side elements smaller.
+ * @param mirror acitvates the mirror effect.
  */
 @Immutable
 @Parcelize

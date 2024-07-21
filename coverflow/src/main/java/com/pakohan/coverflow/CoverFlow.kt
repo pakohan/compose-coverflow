@@ -17,12 +17,21 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
 
+/**
+ * CoverFlow implements 🍎 CoverFlow for Jetpack Compose.
+ *
+ * It uses [LazyRow] under the hood.
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CoverFlow(
+    /** use it to change the background color */
     modifier: Modifier = Modifier,
+    /** used to make the scrolling accessible to the outside */
     state: CoverFlowState = rememberCoverFlowState(),
+    /** used to configure the design */
     params: CoverFlowParams = CoverFlowParams(),
+    /** used to add list items in the [CoverFlowScope] */
     content: CoverFlowScope.() -> Unit,
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }

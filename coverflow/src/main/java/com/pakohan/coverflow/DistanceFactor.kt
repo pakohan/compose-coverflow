@@ -10,14 +10,13 @@ import kotlin.math.abs
  */
 interface DistanceFactor {
     /**
-     * factor should return negative values for all elements left of the center and positive for all
+     * Factor should return negative values for all elements left of the center and positive for all
      * elements right of the center.
+     *
      * * It is supposed to be 0 in the center.
      * * It can take values from -1 to 1.
      * * (`factor in -1f..1f`)
      * @param relativeDistance the center to the distance relative to focused covers size.
-     *
-     * this methods name has a great fun-factor
      */
     fun factor(
         relativeDistance: Float,
@@ -45,12 +44,14 @@ class OffsetLinearDistanceFactor(
     }
 
     /**
+     * The factor grows from -1 to 0 to 1. The slope depend on the start and end parameters of the class.
+     *
      * * `relativeDistance < -end -> -1f`
      * * `relativeDistance in -end..-start -> -1f..0f`
      * * `relativeDistance in -start..start -> 0f`
      * * `relativeDistance in start..end -> 0f..1f`
      * * `relativeDistance > end -> 1f`
-     * * `if abs(relativeDistance) in start..end` the factor grows linear.
+     * * `if abs(relativeDistance) in start..end` the factor changes linear.
      */
     override fun factor(
         relativeDistance: Float,
@@ -81,6 +82,10 @@ class OffsetLinearDistanceFactor(
 @Parcelize
 class StaticDistanceFactor(private val factor: Float = 0f) : DistanceFactor,
         Parcelable {
+    /**
+     * Returns the negative factor for a negative distance and the positive factor for a positive
+     * distance. 0 returns 0.
+     */
     override fun factor(
         relativeDistance: Float,
     ): Float {
