@@ -69,10 +69,10 @@ fun CoverFlowSettings(
             valueRange = 0f..90f
         )
 
-        Text("Horizontal shift: ${params.horizontalShift.round(2)}")
+        Text("Horizontal shift: ${params.shift.round(2)}")
         Slider(
-            value = params.horizontalShift,
-            onValueChange = { onParamsUpdate(params.copy(horizontalShift = it)) },
+            value = params.shift,
+            onValueChange = { onParamsUpdate(params.copy(shift = it)) },
             steps = 100,
         )
 

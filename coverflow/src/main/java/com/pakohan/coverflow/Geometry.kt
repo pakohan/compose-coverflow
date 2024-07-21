@@ -71,7 +71,7 @@ internal class Geometry(
 
     @Stable
     internal fun translationX(distanceToCenter: Float): Float {
-        return coverOffset * params.horizontalShift * effectFactor(distanceToCenter)
+        return coverOffset * params.shift * effectFactor(distanceToCenter)
     }
 }
 
@@ -90,7 +90,7 @@ data class CoverFlowParams(
     val offset: Float = .4f,
     val distanceFactor: @RawValue DistanceFactor = OffsetLinearDistanceFactor(),
     val angle: Float = 55f,
-    val horizontalShift: Float = .4f,
+    val shift: Float = .4f,
     val zoom: Float = .8f,
     val mirror: Boolean = true,
 ) : Parcelable

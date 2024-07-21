@@ -8,14 +8,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/**
+ * @param onSelectHandler will be called with -1 as long as the scrolling takes place
+ */
 @Composable
-fun rememberCoverFlowState(): CoverFlowState {
+fun rememberCoverFlowState(onSelectHandler: (Int) -> Unit = {}): CoverFlowState {
     val lazyListState: LazyListState = rememberLazyListState()
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     return remember {
         CoverFlowState(
             lazyListState,
-            coroutineScope
+            coroutineScope,
+            onSelectHandler,
         )
     }
 }
@@ -23,10 +27,14 @@ fun rememberCoverFlowState(): CoverFlowState {
 class CoverFlowState internal constructor(
     internal val lazyListState: LazyListState,
     private val coroutineScope: CoroutineScope,
+    private val onSelectHandler: (Int) -> Unit = {},
 ) {
     internal var geometry: Geometry? = null
     var selectedIndex: Int = 0
-        internal set
+        internal set(it) {
+            field = it
+            onSelectHandler(it)
+        }
 
     fun scrollToItem(
         index: Int,

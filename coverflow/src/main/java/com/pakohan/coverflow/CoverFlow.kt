@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.IntSize
 @Composable
 fun CoverFlow(
     modifier: Modifier = Modifier,
-    coverFlowState: CoverFlowState = rememberCoverFlowState(),
+    state: CoverFlowState = rememberCoverFlowState(),
     params: CoverFlowParams = CoverFlowParams(),
     content: CoverFlowScope.() -> Unit,
 ) {
@@ -34,8 +34,8 @@ fun CoverFlow(
                 size = coordinates.size
             },
         verticalAlignment = Alignment.CenterVertically,
-        state = coverFlowState.lazyListState,
-        flingBehavior = rememberSnapFlingBehavior(lazyListState = coverFlowState.lazyListState)
+        state = state.lazyListState,
+        flingBehavior = rememberSnapFlingBehavior(lazyListState = state.lazyListState)
     ) {
         if (size != IntSize.Zero) {
             val geometry = Geometry(
@@ -43,12 +43,12 @@ fun CoverFlow(
                 size
             )
 
-            coverFlowState.geometry = geometry
+            state.geometry = geometry
 
             val coverFlowScope = CoverFlowScopeImpl(
                 geometry = geometry,
                 lazyListScope = this,
-                coverFlowState = coverFlowState
+                coverFlowState = state
             )
 
             item {

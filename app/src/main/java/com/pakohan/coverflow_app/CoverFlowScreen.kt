@@ -32,8 +32,8 @@ fun CoverFlowScreen(
                               onParamsUpdate = { params = it })
         }
         CoverFlow(
+            modifier = Modifier.background(Color.Black),
             params = params,
-            modifier = Modifier.background(Color.Black)
         ) {
             items(
                 listOf(
@@ -72,7 +72,7 @@ fun debugCoverFlowParams(): CoverFlowParams {
         size = .5f,
         offset = 1f,
         angle = 0f,
-        horizontalShift = 0f,
+        shift = 0f,
         zoom = 1f,
         mirror = false
     )
