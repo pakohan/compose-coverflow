@@ -50,7 +50,7 @@ class OffsetLinearDistanceFactor(
      * * `relativeDistance in -start..start -> 0f`
      * * `relativeDistance in start..end -> 0f..1f`
      * * `relativeDistance > end -> 1f`
-     * * `if abs(relativeDistance) in start.end` the factor grows linear.
+     * * `if abs(relativeDistance) in start..end` the factor grows linear.
      */
     override fun factor(
         relativeDistance: Float,
