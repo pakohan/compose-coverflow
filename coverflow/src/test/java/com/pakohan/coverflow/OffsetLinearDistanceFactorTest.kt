@@ -1,7 +1,6 @@
 package com.pakohan.coverflow
 
 import org.junit.Assert.assertEquals
-import org.junit.Assert.fail
 import org.junit.Test
 
 class OffsetLinearDistanceFactorTest {
@@ -12,6 +11,9 @@ class OffsetLinearDistanceFactorTest {
             1f
         )
         val cases = mapOf(
+            -1f to -1f,
+            -.75f to -.5f,
+            -.5f to -0f,
             0f to 0f,
             .5f to 0f,
             .75f to .5f,
