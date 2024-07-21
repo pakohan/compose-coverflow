@@ -1,5 +1,6 @@
 package com.pakohan.coverflow_app
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.pakohan.coverflow.CoverFlow
 import com.pakohan.coverflow.CoverFlowParams
+import com.pakohan.coverflow.rememberCoverFlowState
 
 // This is for playing around with the parameters
 @Composable
@@ -33,10 +35,22 @@ fun CoverFlowScreen(
         }
         CoverFlow(
             modifier = Modifier.background(Color.Black),
+            state = rememberCoverFlowState(onSelectHandler = {
+                Log.d(
+                    "CoverFlowScreen",
+                    "onSelectHandler outside of scope: $it"
+                )
+            }),
             params = params,
         ) {
             items(
-                listOf(
+                onSelectHandler = { item: String, index: Int ->
+                    Log.d(
+                        "CoverFlowScreen",
+                        "onSelectHandler in scope: $index"
+                    )
+                },
+                items = listOf(
                     "This is a simple Compose CoverFlow implementation",
                     "Apple patented it, but the patent expired in 2024",
                     "This component is based on LazyRow, which makes it efficient",

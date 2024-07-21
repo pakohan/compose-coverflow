@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 interface CoverFlowScope {
     fun <T> items(
         items: List<T>,
-        onSelectHandler: (item: T) -> Unit = {},
+        onSelectHandler: (item: T, index: Int) -> Unit = { _: T, _: Int -> },
         key: ((index: Int) -> Any)? = null,
         contentType: (index: Int) -> Any? = { null },
         itemContent: @Composable ((item: T) -> Unit),
@@ -28,7 +28,7 @@ internal class CoverFlowScopeImpl(
 ) : CoverFlowScope {
     override fun <T> items(
         items: List<T>,
-        onSelectHandler: (item: T) -> Unit,
+        onSelectHandler: (item: T, index: Int) -> Unit,
         key: ((index: Int) -> Any)?,
         contentType: (index: Int) -> Any?,
         itemContent: @Composable (item: T) -> Unit,
@@ -45,7 +45,10 @@ internal class CoverFlowScopeImpl(
                         isSelected
                     )
                 ) {
-                    onSelectHandler(items[it])
+                    onSelectHandler(
+                        items[it],
+                        it
+                    )
                 }
             },
             geometry = geometry,
