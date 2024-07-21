@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.IntSize
 @Composable
 fun CoverFlow(
     modifier: Modifier = Modifier,
-    coverFlowState: CoverFlowState = rememeberCoverFlowState(),
+    coverFlowState: CoverFlowState = rememberCoverFlowState(),
     params: CoverFlowParams = CoverFlowParams(),
     content: CoverFlowScope.() -> Unit,
 ) {

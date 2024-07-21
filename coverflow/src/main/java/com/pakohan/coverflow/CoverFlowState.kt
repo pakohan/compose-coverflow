@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun rememeberCoverFlowState(
+fun rememberCoverFlowState(
     lazyListState: LazyListState = rememberLazyListState(),
 ): CoverFlowState {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
