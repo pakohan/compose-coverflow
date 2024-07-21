@@ -1,4 +1,4 @@
-package com.pakohan.coverflow
+package com.pakohan.coverflow_app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.pakohan.coverflow.CoverFlowScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,8 +37,9 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }) { innerPadding ->
-                    com.pakohan.coverflow.CoverFlowScreen(
-                        Modifier.padding(innerPadding)
+                    CoverFlowScreen(
+                        Modifier
+                            .padding(innerPadding)
                             .fillMaxSize(),
                         showSettings = showSettings
                     )
