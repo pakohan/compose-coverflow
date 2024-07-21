@@ -1,6 +1,5 @@
-package com.pakohan.coverflow.coverflow
+package com.pakohan.coverflow_app
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.pakohan.coverflow.CoverFlowParams
+import com.pakohan.coverflow.OffsetLinearDistanceFactor
 import kotlin.math.round
 
 @Composable

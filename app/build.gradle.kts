@@ -1,15 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("kotlin-parcelize")
 }
 
 android {
-    namespace = "com.pakohan.coverflow"
+    namespace = "com.pakohan.coverflow_app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.pakohan.coverflow"
+        applicationId = "com.pakohan.coverflow_app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -60,6 +59,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(project(":coverflow"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
