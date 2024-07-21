@@ -3,7 +3,13 @@ package com.pakohan.coverflow
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 
+/**
+ * Receiver scope to add elements to the CoverFlow list.
+ */
 interface CoverFlowScope {
+    /**
+     * Add typed items. See [LazyListScope.items]
+     */
     fun <T> items(
         items: List<T>,
         onSelectHandler: (item: T, index: Int) -> Unit = { _: T, _: Int -> },
@@ -12,6 +18,9 @@ interface CoverFlowScope {
         itemContent: @Composable ((item: T) -> Unit),
     )
 
+    /**
+     * Add typed items. See [LazyListScope.items]
+     */
     fun items(
         count: Int,
         onSelectHandler: (index: Int) -> Unit = {},
