@@ -21,11 +21,11 @@ import androidx.compose.ui.unit.IntSize
 @Composable
 fun CoverFlow(
     modifier: Modifier = Modifier,
+    coverFlowState: CoverFlowState = rememeberCoverFlowState(),
     params: CoverFlowParams = CoverFlowParams(),
     content: CoverFlowScope.() -> Unit,
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
-    val coverFlowState = rememeberCoverFlowState()
 
     LazyRow(
         modifier = modifier
