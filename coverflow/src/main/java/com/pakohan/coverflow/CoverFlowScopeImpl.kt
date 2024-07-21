@@ -1,20 +1,37 @@
 package com.pakohan.coverflow
 
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 
-class CoverFlowScope(
-    internal val geometry: Geometry,
-    internal val lazyListScope: LazyListScope,
-    internal val coverFlowState: CoverFlowState,
-) {
+interface CoverFlowScope {
     fun <T> items(
         items: List<T>,
         onSelectHandler: (item: T) -> Unit = {},
         key: ((index: Int) -> Any)? = null,
         contentType: (index: Int) -> Any? = { null },
-        itemContent: @Composable LazyItemScope.(item: T) -> Unit,
+        itemContent: @Composable ((item: T) -> Unit),
+    )
+
+    fun items(
+        count: Int,
+        onSelectHandler: (index: Int) -> Unit = {},
+        key: ((index: Int) -> Any)? = null,
+        contentType: (index: Int) -> Any? = { null },
+        itemContent: @Composable ((index: Int) -> Unit),
+    )
+}
+
+internal class CoverFlowScopeImpl(
+    private val geometry: Geometry,
+    private val lazyListScope: LazyListScope,
+    private val coverFlowState: CoverFlowState,
+) : CoverFlowScope {
+    override fun <T> items(
+        items: List<T>,
+        onSelectHandler: (item: T) -> Unit,
+        key: ((index: Int) -> Any)?,
+        contentType: (index: Int) -> Any?,
+        itemContent: @Composable (item: T) -> Unit,
     ) = lazyListScope.items(
         items.size,
         key,
@@ -37,12 +54,12 @@ class CoverFlowScope(
         }
     }
 
-    fun items(
+    override fun items(
         count: Int,
-        onSelectHandler: (index: Int) -> Unit = {},
-        key: ((index: Int) -> Any)? = null,
-        contentType: (index: Int) -> Any? = { null },
-        itemContent: @Composable LazyItemScope.(index: Int) -> Unit,
+        onSelectHandler: (index: Int) -> Unit,
+        key: ((index: Int) -> Any)?,
+        contentType: (index: Int) -> Any?,
+        itemContent: @Composable (index: Int) -> Unit,
     ) = lazyListScope.items(
         count,
         key,

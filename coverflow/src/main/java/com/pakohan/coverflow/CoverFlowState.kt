@@ -32,7 +32,6 @@ class CoverFlowState(
     fun scrollToItem(
         index: Int,
     ) {
-
         val geometryCopy = geometry
         if (geometryCopy != null) {
             coroutineScope.launch {

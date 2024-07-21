@@ -61,3 +61,19 @@ fun CoverFlowScreen(
         }
     }
 }
+
+/**
+ * For debugging. Sets the Parameters to values so that we get a normal LazyList without any
+ * CoverFlow effects.
+ */
+@Suppress("unused")
+fun debugCoverFlowParams(): CoverFlowParams {
+    return CoverFlowParams(
+        size = .5f,
+        offset = 1f,
+        angle = 0f,
+        horizontalShift = 0f,
+        zoom = 1f,
+        mirror = false
+    )
+}

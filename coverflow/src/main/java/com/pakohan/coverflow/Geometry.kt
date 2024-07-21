@@ -11,7 +11,7 @@ import kotlin.math.min
 
 @Immutable
 @Stable
-class Geometry(
+internal class Geometry(
     internal val params: CoverFlowParams = CoverFlowParams(),
     private val size: IntSize = IntSize.Zero,
 ) {
@@ -41,10 +41,6 @@ class Geometry(
     @Stable
     internal val spacerWidth
         get() = containerCenter - coverOffset / 2
-
-    @Stable
-    internal val spacerHeight
-        get() = coverOffset / 2
 
     @Stable
     internal fun isSelected(horizontalPosition: Float): Boolean {
@@ -98,18 +94,3 @@ data class CoverFlowParams(
     val zoom: Float = .8f,
     val mirror: Boolean = true,
 ) : Parcelable
-
-/**
- * For debugging. Sets the Parameters to values so that we get a normal LazyList without any
- * CoverFlow effects.
- */
-fun debugCoverFlowParams(): CoverFlowParams {
-    return CoverFlowParams(
-        size = .5f,
-        offset = 1f,
-        angle = 0f,
-        horizontalShift = 0f,
-        zoom = 1f,
-        mirror = false
-    )
-}

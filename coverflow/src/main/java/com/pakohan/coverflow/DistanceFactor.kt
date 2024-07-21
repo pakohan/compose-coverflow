@@ -16,6 +16,8 @@ interface DistanceFactor {
      * * It can take values from -1 to 1.
      * * (`factor in -1f..1f`)
      * @param relativeDistance the center to the distance relative to focused covers size.
+     *
+     * this methods name has a great fun-factor
      */
     fun factor(
         relativeDistance: Float,
