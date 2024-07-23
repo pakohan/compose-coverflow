@@ -9,6 +9,34 @@ import kotlinx.parcelize.RawValue
 import kotlin.math.abs
 import kotlin.math.min
 
+/**
+ * Params for configuring the coverflow composable.
+ *
+ * All relevant values are relativ to the dimensions of the CoverFlow composable to make it responsive.
+ * It is based on the shorter of the two sides of the outer component.
+ *
+ * @param size is multiplied with that edge to get the cover size in the middle.
+ * @param offset is multiplied with that edge to get the distance between two covers in the list.
+ * @param distanceFactor calculates how strong the transformations are applied to covers depending
+ * on their distance to the center.
+ * @param angle is the maximum rotation angle.
+ * @param shift is the horizontal shift of the items away from the center. Useful for giving the
+ * center element more space.
+ * @param zoom makes the side elements smaller.
+ * @param mirror acitvates the mirror effect.
+ */
+@Immutable
+@Parcelize
+data class CoverFlowParams(
+    val size: Float = .5f,
+    val offset: Float = .4f,
+    val distanceFactor: @RawValue DistanceFactor = OffsetLinearDistanceFactor(),
+    val angle: Float = 55f,
+    val shift: Float = .4f,
+    val zoom: Float = .8f,
+    val mirror: Boolean = true,
+) : Parcelable
+
 @Immutable
 @Stable
 internal class Geometry(
@@ -74,31 +102,3 @@ internal class Geometry(
         return coverOffset * params.shift * effectFactor(distanceToCenter)
     }
 }
-
-/**
- * Params for configuring the coverflow composable.
- *
- * All relevant values are relativ to the dimensions of the CoverFlow composable to make it responsive.
- * It is based on the shorter of the two sides of the outer component.
- *
- * @param size is multiplied with that edge to get the cover size in the middle.
- * @param offset is multiplied with that edge to get the distance between two covers in the list.
- * @param distanceFactor calculates how strong the transformations are applied to covers depending
- * on their distance to the center.
- * @param angle is the maximum rotation angle.
- * @param shift is the horizontal shift of the items away from the center. Useful for giving the
- * center element more space.
- * @param zoom makes the side elements smaller.
- * @param mirror acitvates the mirror effect.
- */
-@Immutable
-@Parcelize
-data class CoverFlowParams(
-    val size: Float = .5f,
-    val offset: Float = .4f,
-    val distanceFactor: @RawValue DistanceFactor = OffsetLinearDistanceFactor(),
-    val angle: Float = 55f,
-    val shift: Float = .4f,
-    val zoom: Float = .8f,
-    val mirror: Boolean = true,
-) : Parcelable

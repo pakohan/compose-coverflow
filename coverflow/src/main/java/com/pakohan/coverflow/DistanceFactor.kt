@@ -1,6 +1,7 @@
 package com.pakohan.coverflow
 
 import android.os.Parcelable
+import androidx.annotation.FloatRange
 import kotlinx.parcelize.Parcelize
 import kotlin.math.abs
 
@@ -30,15 +31,19 @@ interface DistanceFactor {
  */
 @Parcelize
 class OffsetLinearDistanceFactor(
-    private val start: Float = 0f,
-    private val end: Float = .5f,
+    @FloatRange(
+        from = 0.0,
+        to = Double.POSITIVE_INFINITY
+    ) private val start: Float = 0f,
+    @FloatRange(
+        from = 0.0,
+        to = Double.POSITIVE_INFINITY
+    ) private val end: Float = .5f,
 ) : DistanceFactor,
         Parcelable {
 
     init {
-        if (start < 0f || end < 0f) {
-            throw IllegalArgumentException("start ($start) and end ($end) must not be negative")
-        } else if (start > end) {
+        if (start > end) {
             throw IllegalArgumentException("start ($start) must be smaller than end ($end)")
         }
     }
