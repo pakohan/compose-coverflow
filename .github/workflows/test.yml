@@ -1,5 +1,9 @@
 name: Run JUnit tests
-on: [ push, pull_request ]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 permissions:
   contents: read
 concurrency:
