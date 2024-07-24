@@ -12,6 +12,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 foundationAndroid = "1.6.8"
 material3Android = "1.2.1"
+dokka = "1.9.20"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,3 +39,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+org-jetbrains-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
