@@ -1,5 +1,5 @@
 # compose-coverflow
-[![JUnit tests](https://github.com/pakohan/compose-coverflow/actions/workflows/test.yml/badge.svg)](https://github.com/pakohan/compose-coverflow/actions/workflows/test.yml)
+[![Gradle Tests](https://github.com/pakohan/compose-coverflow/actions/workflows/test.yml/badge.svg)](https://github.com/pakohan/compose-coverflow/actions/workflows/test.yml)
 
 Jetpack Compose implementation of 🍎 CoverFlow.
 
