@@ -18,7 +18,7 @@ scaffold:
 
 I plan to publish the coverflow module as a library to a maven central eventually, automated by
 GitHub Actions.
-The app module can be run on an  Android device as a demo to show what the Component is capable of
+The app module can be run on an Android device as a demo to show what the Component is capable of
 and how to configure it.
 
 ## Demonstration Video
@@ -27,7 +27,7 @@ and how to configure it.
 
 ## Documentation
 
-Read the [KDoc](https://pakohan.github.io/compose-coverflow/coverflow/com.pakohan.coverflow/).
+Read the [KDoc](https://pakohan.github.io/compose-coverflow/com.pakohan.coverflow/).
 
 ## Usage
 
