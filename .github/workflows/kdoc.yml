@@ -22,10 +22,10 @@ jobs:
           java-version: '22'
           distribution: 'temurin'
           cache: gradle
-      - run: ./gradlew dokkaHtmlMultiModule
+      - run: ./gradlew dokkaHtml
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: 'build/dokka/htmlMultiModule'
+          path: 'coverflow/build/dokka/html'
       - uses: actions/deploy-pages@v4
         id: deployment
