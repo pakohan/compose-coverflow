@@ -6,11 +6,3 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.org.jetbrains.dokka)
 }
-
-tasks.dokkaHtmlMultiModule {
-    outputDirectory.set(layout.buildDirectory.dir("doc"))
-}
-
-subprojects {
-    apply(plugin = "org.jetbrains.dokka")
-}
