@@ -39,12 +39,6 @@ android {
     buildFeatures {
         compose = true
     }
-    publishing {
-        singleVariant("release") {
-            withJavadocJar()
-            withSourcesJar()
-        }
-    }
 }
 
 mavenPublishing {
