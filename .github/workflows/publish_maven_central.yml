@@ -1,4 +1,4 @@
-name: Deploy static content to Pages
+name: Push to Maven Central
 on:
   push:
     tags:
