@@ -44,7 +44,8 @@ android {
 mavenPublishing {
     signAllPublications()
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
-    coordinates("io.github.pakohan", "coverflow", "0.1.0")
+    val version = (findProperty("version") as String?) ?: error("Env variable not found")
+    coordinates("io.github.pakohan", "coverflow", version)
 
     pom {
         name.set("CoverFlow")
