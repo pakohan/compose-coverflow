@@ -41,29 +41,18 @@ internal class CoverFlowScopeImpl(
         key: ((index: Int) -> Any)?,
         contentType: (index: Int) -> Any?,
         itemContent: @Composable (item: T) -> Unit,
-    ) = lazyListScope.items(
-        items.size,
-        key,
-        contentType,
+    ) = items(
+        count = items.size,
+        onSelectHandler = {
+            onSelectHandler(
+                items[it],
+                it,
+            )
+        },
+        key = key,
+        contentType = contentType,
     ) {
-        Cover(
-            onClickHandler = { coverFlowState.scrollToItem(it) },
-            onSelectedHandler = { isSelected: Boolean ->
-                if (selectHandler(
-                        it,
-                        isSelected,
-                    )
-                ) {
-                    onSelectHandler(
-                        items[it],
-                        it,
-                    )
-                }
-            },
-            geometry = geometry,
-        ) {
-            itemContent(items[it])
-        }
+        itemContent(items[it])
     }
 
     override fun items(
