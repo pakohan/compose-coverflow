@@ -19,13 +19,17 @@ import androidx.compose.ui.unit.Constraints
 import kotlin.math.abs
 
 @Stable
-internal fun Modifier.calculatedZIndex(geometry: Geometry): Modifier = composed(
+internal fun Modifier.calculatedZIndex(
+    geometry: Geometry,
+    onSelectedHandler: (Boolean) -> Unit,
+): Modifier = composed(
     factory = {
         val floatState = remember {
             mutableFloatStateOf(0f)
         }
         this then CalculatedZIndexElement(
             geometry = geometry,
+            onSelectedHandler = onSelectedHandler,
             floatState = floatState,
         )
     },
@@ -33,15 +37,18 @@ internal fun Modifier.calculatedZIndex(geometry: Geometry): Modifier = composed(
 
 internal data class CalculatedZIndexElement(
     private val geometry: Geometry,
+    private val onSelectedHandler: (Boolean) -> Unit,
     private val floatState: MutableFloatState,
 ) : ModifierNodeElement<CalculatedZIndexNode>() {
     override fun create() = CalculatedZIndexNode(
         geometry,
+        onSelectedHandler,
         floatState,
     )
 
     override fun update(node: CalculatedZIndexNode) {
         node.geometry = geometry
+        node.onSelectedHandler = onSelectedHandler
         node.xPositionInParent = floatState
     }
 
@@ -53,6 +60,7 @@ internal data class CalculatedZIndexElement(
 
 internal class CalculatedZIndexNode(
     var geometry: Geometry,
+    var onSelectedHandler: (Boolean) -> Unit,
     var xPositionInParent: MutableFloatState,
 ) : LayoutModifierNode,
         GlobalPositionAwareModifierNode,
@@ -60,6 +68,8 @@ internal class CalculatedZIndexNode(
 
     override fun onGloballyPositioned(coordinates: LayoutCoordinates) {
         xPositionInParent.floatValue = coordinates.positionInParent().x
+        // we use geometry to check whether an element is selected. That is if it's in the center.
+        onSelectedHandler(geometry.isSelected(coordinates.positionInParent().x))
     }
 
     override fun MeasureScope.measure(

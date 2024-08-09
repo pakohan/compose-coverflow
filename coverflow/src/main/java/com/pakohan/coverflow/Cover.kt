@@ -19,10 +19,10 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 
 @Composable
-internal fun Cover(
+internal inline fun Cover(
     geometry: Geometry,
-    onSelectedHandler: (Boolean) -> Unit,
-    content: @Composable CoverContext.() -> Unit,
+    noinline onSelectedHandler: (Boolean) -> Unit,
+    content: @Composable (Float) -> Unit,
 ) {
     var horizontalPosition by remember { mutableStateOf<Float?>(null) }
     val distanceToCenter = geometry.distanceToCenter(horizontalPosition ?: 0f)
@@ -34,22 +34,18 @@ internal fun Cover(
             .onGloballyPositioned { coordinates ->
                 horizontalPosition = coordinates.positionInParent().x
             }
-            .calculatedZIndex(geometry),
+            .calculatedZIndex(
+                geometry,
+                onSelectedHandler,
+            ),
         contentAlignment = Alignment.Center,
     ) {
         // this makes sure that the cover only gets painted after we got the proper horizontal position.
         if (horizontalPosition != null) {
-
-            // we use geometry to check whether an element is selected. That is if it's in the
-            // center.
-            onSelectedHandler(geometry.isSelected(horizontalPosition ?: 0f))
-
-            CoverContext(distanceToCenter).content()
+            content(distanceToCenter)
         }
     }
 }
-
-internal data class CoverContext(val distanceToCenter: Float)
 
 @Composable
 internal fun InnerBox(

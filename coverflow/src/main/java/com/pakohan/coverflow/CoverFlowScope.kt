@@ -77,7 +77,7 @@ internal class CoverFlowScopeImpl(
                 }
             },
             geometry = geometry,
-        ) {
+        ) { distanceToCenter ->
             InnerBox(
                 geometry = geometry,
                 distanceToCenter = distanceToCenter,
