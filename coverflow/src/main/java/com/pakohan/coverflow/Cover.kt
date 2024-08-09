@@ -25,7 +25,6 @@ internal inline fun Cover(
     content: @Composable (Float) -> Unit,
 ) {
     var horizontalPosition by remember { mutableStateOf<Float?>(null) }
-    val distanceToCenter = geometry.distanceToCenter(horizontalPosition ?: 0f)
 
     // This box is used to space the elements horizontally and to give them the proper z index.
     Box(
@@ -41,8 +40,9 @@ internal inline fun Cover(
         contentAlignment = Alignment.Center,
     ) {
         // this makes sure that the cover only gets painted after we got the proper horizontal position.
-        if (horizontalPosition != null) {
-            content(distanceToCenter)
+        val position = horizontalPosition
+        if (position != null) {
+            content(geometry.distanceToCenter(position))
         }
     }
 }
