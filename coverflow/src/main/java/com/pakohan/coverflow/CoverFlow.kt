@@ -35,6 +35,13 @@ fun CoverFlow(
     content: CoverFlowScope.() -> Unit,
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
+    val geometry = Geometry(
+        params,
+        size,
+    )
+    state.geometry = geometry
+
+    val spacerModifier = Modifier.width(with(LocalDensity.current) { (geometry.spacerWidth).toDp() })
 
     LazyRow(
         modifier = modifier
@@ -44,31 +51,20 @@ fun CoverFlow(
             },
         verticalAlignment = Alignment.CenterVertically,
         state = state.lazyListState,
-        flingBehavior = rememberSnapFlingBehavior(lazyListState = state.lazyListState)
+        flingBehavior = rememberSnapFlingBehavior(lazyListState = state.lazyListState),
     ) {
-        if (size != IntSize.Zero) {
-            val geometry = Geometry(
-                params,
-                size
-            )
+        item {
+            Spacer(modifier = spacerModifier)
+        }
 
-            state.geometry = geometry
+        CoverFlowScopeImpl(
+            geometry = geometry,
+            lazyListScope = this,
+            coverFlowState = state,
+        ).apply(content)
 
-            val coverFlowScope = CoverFlowScopeImpl(
-                geometry = geometry,
-                lazyListScope = this,
-                coverFlowState = state
-            )
-
-            item {
-                Spacer(modifier = Modifier.width(with(LocalDensity.current) { (geometry.spacerWidth).toDp() }))
-            }
-
-            coverFlowScope.apply(content)
-
-            item {
-                Spacer(modifier = Modifier.width(with(LocalDensity.current) { (geometry.spacerWidth).toDp() }))
-            }
+        item {
+            Spacer(modifier = spacerModifier)
         }
     }
 }
