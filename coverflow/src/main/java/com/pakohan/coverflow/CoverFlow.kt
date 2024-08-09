@@ -61,7 +61,7 @@ fun CoverFlow(
             geometry = geometry,
             lazyListScope = this,
             coverFlowState = state,
-        ).apply(content)
+        ).content()
 
         item {
             Spacer(modifier = spacerModifier)

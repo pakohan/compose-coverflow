@@ -21,9 +21,8 @@ import androidx.compose.ui.platform.LocalDensity
 @Composable
 internal fun Cover(
     geometry: Geometry,
-    onClickHandler: () -> Unit = {},
     onSelectedHandler: (Boolean) -> Unit,
-    content: @Composable () -> Unit,
+    content: @Composable CoverContext.() -> Unit,
 ) {
     var horizontalPosition by remember { mutableStateOf<Float?>(null) }
     val distanceToCenter = geometry.distanceToCenter(horizontalPosition ?: 0f)
@@ -45,41 +44,52 @@ internal fun Cover(
             // center.
             onSelectedHandler(geometry.isSelected(horizontalPosition ?: 0f))
 
-            // This Box applies the transformation effects: rotation, horizontal shift, and zoom
-            Box(
-                modifier = Modifier
-                    .requiredSize(with(LocalDensity.current) { geometry.coverSize.toDp() })
-                    .graphicsLayer(
-                        rotationY = geometry.rotation(distanceToCenter),
-                        translationX = geometry.translationX(distanceToCenter),
-                        scaleY = geometry.scale(distanceToCenter),
-                        scaleX = geometry.scale(distanceToCenter),
-                    ),
-                propagateMinConstraints = true,
+            CoverContext(distanceToCenter).content()
+        }
+    }
+}
+
+internal data class CoverContext(val distanceToCenter: Float)
+
+@Composable
+internal fun InnerBox(
+    geometry: Geometry,
+    distanceToCenter: Float,
+    onClickHandler: () -> Unit = {},
+    content: @Composable () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .requiredSize(with(LocalDensity.current) { geometry.coverSize.toDp() })
+            .graphicsLayer(
+                rotationY = geometry.rotation(distanceToCenter),
+                translationX = geometry.translationX(distanceToCenter),
+                scaleY = geometry.scale(distanceToCenter),
+                scaleX = geometry.scale(distanceToCenter),
+            ),
+        propagateMinConstraints = true,
+    ) {
+        val interactionSource = remember { MutableInteractionSource() }
+        if (geometry.params.mirror) {
+            Mirror(
+                modifier = Modifier.clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                    onClick = onClickHandler,
+                ),
+                coverSize = geometry.coverSize,
             ) {
-                val interactionSource = remember { MutableInteractionSource() }
-                if (geometry.params.mirror) {
-                    Mirror(
-                        modifier = Modifier.clickable(
-                            interactionSource = interactionSource,
-                            indication = null,
-                            onClick = onClickHandler,
-                        ),
-                        coverSize = geometry.coverSize,
-                    ) {
-                        content()
-                    }
-                } else {
-                    Surface(
-                        modifier = Modifier.clickable(
-                            interactionSource = interactionSource,
-                            indication = null,
-                            onClick = onClickHandler,
-                        ),
-                    ) {
-                        content()
-                    }
-                }
+                content()
+            }
+        } else {
+            Surface(
+                modifier = Modifier.clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                    onClick = onClickHandler,
+                ),
+            ) {
+                content()
             }
         }
     }
