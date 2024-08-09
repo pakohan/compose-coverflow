@@ -27,27 +27,31 @@ fun CoverFlowScreen(
     var params by rememberSaveable { mutableStateOf(CoverFlowParams()) }
 
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         AnimatedVisibility(visible = showSettings) {
-            CoverFlowSettings(params = params,
-                              onParamsUpdate = { params = it })
+            CoverFlowSettings(
+                params = params,
+                onParamsUpdate = { params = it },
+            )
         }
         CoverFlow(
             modifier = Modifier.background(Color.Black),
-            state = rememberCoverFlowState(onSelectHandler = {
-                Log.d(
-                    "CoverFlowScreen",
-                    "onSelectHandler outside of scope: $it"
-                )
-            }),
+            state = rememberCoverFlowState(
+                onSelectHandler = {
+                    Log.d(
+                        "CoverFlowScreen",
+                        "onSelectHandler outside of scope: $it",
+                    )
+                },
+            ),
             params = params,
         ) {
             items(
                 onSelectHandler = { item: String, index: Int ->
                     Log.d(
                         "CoverFlowScreen",
-                        "onSelectHandler in scope: $index"
+                        "onSelectHandler in scope: $index",
                     )
                 },
                 items = listOf(
@@ -62,14 +66,14 @@ fun CoverFlowScreen(
                     "Offset is how much space is between each element",
                     "Then there are three effects being applied to the elements on the side: angle, horizontal shift, and zoom",
                     "The effect is added gradually, depending on the distance to the center",
-                    "The start parameter tells when the effects start being applied, the end parameter tells from which distance they should be fully applied"
-                )
+                    "The start parameter tells when the effects start being applied, the end parameter tells from which distance they should be fully applied",
+                ),
             ) {
                 Text(
                     text = it,
                     fontSize = 30.sp,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.background(Color.White)
+                    modifier = Modifier.background(Color.White),
                 )
             }
         }
@@ -88,6 +92,6 @@ fun debugCoverFlowParams(): CoverFlowParams {
         angle = 0f,
         shift = 0f,
         zoom = 1f,
-        mirror = false
+        mirror = false,
     )
 }

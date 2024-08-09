@@ -46,11 +46,12 @@ internal fun Mirror(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .height(coverSizeDp)
+                .height(coverSizeDp),
         ) {
             content()
         }
-        Box(propagateMinConstraints = true,
+        Box(
+            propagateMinConstraints = true,
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
@@ -70,20 +71,21 @@ internal fun Mirror(
                     drawRect(
                         topLeft = Offset(
                             0f,
-                            this.size.height / 2
+                            this.size.height / 2,
                         ),
                         size = Size(
                             this.size.width,
-                            this.size.height / 2
+                            this.size.height / 2,
                         ),
                         brush = Brush.verticalGradient(colors),
-                        blendMode = BlendMode.DstIn
+                        blendMode = BlendMode.DstIn,
                     )
                 }
                 .blur(
                     radiusX = 1.dp,
                     radiusY = 3.dp,
-                )) {
+                ),
+        ) {
             content()
         }
     }
@@ -98,12 +100,12 @@ private object HalfSizeShape : Shape {
         Rect(
             Offset(
                 0f,
-                size.height / 2
+                size.height / 2,
             ),
             Size(
                 size.width,
-                size.height
-            )
-        )
+                size.height,
+            ),
+        ),
     )
 }

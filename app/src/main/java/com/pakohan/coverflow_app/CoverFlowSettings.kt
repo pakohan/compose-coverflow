@@ -33,14 +33,14 @@ fun CoverFlowSettings(
         Slider(
             value = params.size,
             onValueChange = { onParamsUpdate(params.copy(size = it)) },
-            steps = 100
+            steps = 100,
         )
 
         Text("Offset: ${params.offset.round(2)}")
         Slider(
             value = params.offset,
             onValueChange = { onParamsUpdate(params.copy(offset = it)) },
-            steps = 100
+            steps = 100,
         )
 
         Text("Distance: $distanceRange")
@@ -52,9 +52,9 @@ fun CoverFlowSettings(
                     params.copy(
                         distanceFactor = OffsetLinearDistanceFactor(
                             distanceRange.start,
-                            distanceRange.endInclusive
-                        )
-                    )
+                            distanceRange.endInclusive,
+                        ),
+                    ),
                 )
             },
             steps = 100,
@@ -66,7 +66,7 @@ fun CoverFlowSettings(
             value = params.angle,
             onValueChange = { onParamsUpdate(params.copy(angle = it)) },
             steps = 90,
-            valueRange = 0f..90f
+            valueRange = 0f..90f,
         )
 
         Text("Horizontal shift: ${params.shift.round(2)}")
@@ -84,7 +84,7 @@ fun CoverFlowSettings(
         )
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text("Mirror:")
             Spacer(modifier = Modifier.weight(1f))

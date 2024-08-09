@@ -47,7 +47,7 @@ internal class Geometry(
     private val shortEdge
         get() = min(
             size.width,
-            size.height
+            size.height,
         )
 
     @Stable

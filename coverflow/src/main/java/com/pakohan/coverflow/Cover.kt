@@ -38,7 +38,7 @@ internal fun Cover(
             .onGloballyPositioned { coordinates ->
                 horizontalPosition = coordinates.positionInParent().x
             },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         // this makes sure that the cover only gets painted after we got the proper horizontal position.
         if (horizontalPosition != null) {
@@ -57,7 +57,7 @@ internal fun Cover(
                         scaleY = geometry.scale(distanceToCenter),
                         scaleX = geometry.scale(distanceToCenter),
                     ),
-                propagateMinConstraints = true
+                propagateMinConstraints = true,
             ) {
                 val interactionSource = remember { MutableInteractionSource() }
                 if (geometry.params.mirror) {
@@ -65,9 +65,9 @@ internal fun Cover(
                         modifier = Modifier.clickable(
                             interactionSource = interactionSource,
                             indication = null,
-                            onClick = onClickHandler
+                            onClick = onClickHandler,
                         ),
-                        coverSize = geometry.coverSize
+                        coverSize = geometry.coverSize,
                     ) {
                         content()
                     }
@@ -76,7 +76,7 @@ internal fun Cover(
                         modifier = Modifier.clickable(
                             interactionSource = interactionSource,
                             indication = null,
-                            onClick = onClickHandler
+                            onClick = onClickHandler,
                         ),
                     ) {
                         content()
