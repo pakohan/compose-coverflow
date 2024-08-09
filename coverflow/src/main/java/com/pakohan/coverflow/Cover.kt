@@ -17,8 +17,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.zIndex
-import kotlin.math.abs
 
 @Composable
 internal fun Cover(
@@ -34,10 +32,10 @@ internal fun Cover(
     Box(
         modifier = Modifier
             .width(with(LocalDensity.current) { geometry.coverOffset.toDp() })
-            .zIndex(1f - abs(distanceToCenter))
             .onGloballyPositioned { coordinates ->
                 horizontalPosition = coordinates.positionInParent().x
-            },
+            }
+            .calculatedZIndex(geometry),
         contentAlignment = Alignment.Center,
     ) {
         // this makes sure that the cover only gets painted after we got the proper horizontal position.
