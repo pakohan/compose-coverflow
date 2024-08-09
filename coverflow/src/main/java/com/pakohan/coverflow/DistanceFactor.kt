@@ -33,11 +33,11 @@ interface DistanceFactor {
 class OffsetLinearDistanceFactor(
     @FloatRange(
         from = 0.0,
-        to = Double.POSITIVE_INFINITY
+        to = Double.POSITIVE_INFINITY,
     ) private val start: Float = 0f,
     @FloatRange(
         from = 0.0,
-        to = Double.POSITIVE_INFINITY
+        to = Double.POSITIVE_INFINITY,
     ) private val end: Float = .5f,
 ) : DistanceFactor,
         Parcelable {

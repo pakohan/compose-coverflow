@@ -44,12 +44,12 @@ fun CoverFlow(
             },
         verticalAlignment = Alignment.CenterVertically,
         state = state.lazyListState,
-        flingBehavior = rememberSnapFlingBehavior(lazyListState = state.lazyListState)
+        flingBehavior = rememberSnapFlingBehavior(lazyListState = state.lazyListState),
     ) {
         if (size != IntSize.Zero) {
             val geometry = Geometry(
                 params,
-                size
+                size,
             )
 
             state.geometry = geometry
@@ -57,7 +57,7 @@ fun CoverFlow(
             val coverFlowScope = CoverFlowScopeImpl(
                 geometry = geometry,
                 lazyListScope = this,
-                coverFlowState = state
+                coverFlowState = state,
             )
 
             item {

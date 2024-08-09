@@ -27,21 +27,23 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 var showSettings by remember { mutableStateOf(false) }
 
-                Scaffold(floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = { showSettings = !showSettings },
-                    ) {
-                        Icon(
-                            Icons.Filled.Settings,
-                            "Floating action button."
-                        )
-                    }
-                }) { innerPadding ->
+                Scaffold(
+                    floatingActionButton = {
+                        FloatingActionButton(
+                            onClick = { showSettings = !showSettings },
+                        ) {
+                            Icon(
+                                Icons.Filled.Settings,
+                                "Floating action button.",
+                            )
+                        }
+                    },
+                ) { innerPadding ->
                     CoverFlowScreen(
                         Modifier
                             .padding(innerPadding)
                             .fillMaxSize(),
-                        showSettings = showSettings
+                        showSettings = showSettings,
                     )
                 }
             }

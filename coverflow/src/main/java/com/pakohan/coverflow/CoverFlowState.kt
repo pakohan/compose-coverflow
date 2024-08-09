@@ -56,7 +56,7 @@ class CoverFlowState internal constructor(
             coroutineScope.launch {
                 lazyListState.animateScrollToItem(
                     index + 1,
-                    -geometryCopy.spacerWidth
+                    -geometryCopy.spacerWidth,
                 )
             }
         }

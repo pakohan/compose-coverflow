@@ -8,7 +8,7 @@ class OffsetLinearDistanceFactorTest {
     fun factor_fromHalfToOne_success() {
         val ldf = OffsetLinearDistanceFactor(
             .5f,
-            1f
+            1f,
         )
         val cases = mapOf(
             -1f to -1f,
@@ -23,7 +23,7 @@ class OffsetLinearDistanceFactorTest {
         cases.forEach { (input, output) ->
             assertEquals(
                 ldf.factor(input),
-                output
+                output,
             )
         }
     }
