@@ -25,7 +25,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -45,7 +45,11 @@ mavenPublishing {
     signAllPublications()
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     val version = (findProperty("version") as String?) ?: error("Env variable not found")
-    coordinates("io.github.pakohan", "coverflow", version)
+    coordinates(
+        "io.github.pakohan",
+        "coverflow",
+        version,
+    )
 
     pom {
         name.set("CoverFlow")

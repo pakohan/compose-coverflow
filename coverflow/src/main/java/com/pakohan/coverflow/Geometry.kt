@@ -47,7 +47,7 @@ internal class Geometry(
     private val shortEdge
         get() = min(
             size.width,
-            size.height
+            size.height,
         )
 
     @Stable
@@ -83,7 +83,7 @@ internal class Geometry(
     @Stable
     internal fun effectFactor(distanceToCenter: Float): Float {
         return params.distanceFactor.factor(
-            distanceToCenter / coverSize
+            distanceToCenter / coverSize,
         )
     }
 

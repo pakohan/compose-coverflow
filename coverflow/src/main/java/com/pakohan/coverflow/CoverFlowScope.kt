@@ -44,19 +44,19 @@ internal class CoverFlowScopeImpl(
     ) = lazyListScope.items(
         items.size,
         key,
-        contentType
+        contentType,
     ) {
         Cover(
             onClickHandler = { coverFlowState.scrollToItem(it) },
             onSelectedHandler = { isSelected: Boolean ->
                 if (selectHandler(
                         it,
-                        isSelected
+                        isSelected,
                     )
                 ) {
                     onSelectHandler(
                         items[it],
-                        it
+                        it,
                     )
                 }
             },
@@ -75,14 +75,14 @@ internal class CoverFlowScopeImpl(
     ) = lazyListScope.items(
         count,
         key,
-        contentType
+        contentType,
     ) {
         Cover(
             onClickHandler = { coverFlowState.scrollToItem(it) },
             onSelectedHandler = { isSelected: Boolean ->
                 if (selectHandler(
                         it,
-                        isSelected
+                        isSelected,
                     )
                 ) {
                     onSelectHandler(it)
