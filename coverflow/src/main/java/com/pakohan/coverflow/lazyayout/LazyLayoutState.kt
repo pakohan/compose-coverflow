@@ -19,18 +19,18 @@ fun rememberLazyLayoutState(geometry: Geometry = CoverFlowGeometry()) =
 
 data class LazyLayoutItemContent(
     val index: Int,
-    val itemContent: @Composable (Int, Int) -> Unit,
+    val itemContent: @Composable ItemScope.(Int) -> Unit,
 )
 
 interface CustomLazyListScope {
     fun items(
         amount: Int,
-        itemContent: @Composable (Int, Int) -> Unit,
+        itemContent: @Composable ItemScope.(Int) -> Unit,
     )
 
     fun <T> items(
         items: List<T>,
-        itemContent: @Composable (Int, Int, T) -> Unit,
+        itemContent: @Composable ItemScope.(Int, T) -> Unit,
     )
 }
 
@@ -71,7 +71,7 @@ class LazyLayoutState(
 
     override fun items(
         amount: Int,
-        itemContent: @Composable (Int, Int) -> Unit,
+        itemContent: @Composable ItemScope.(Int) -> Unit,
     ) {
         for (i in 0..<amount) {
             items.add(
@@ -85,12 +85,11 @@ class LazyLayoutState(
 
     override fun <T> items(
         items: List<T>,
-        itemContent: @Composable (Int, Int, T) -> Unit,
-    ) = items(items.size) { index, distanceToCenter ->
+        itemContent: @Composable ItemScope.(Int, T) -> Unit,
+    ) = items(items.size) {
         itemContent(
-            index,
-            distanceToCenter,
-            items[index],
+            it,
+            items[it],
         )
     }
 
@@ -99,10 +98,10 @@ class LazyLayoutState(
         index: Int,
         key: Any,
     ) {
-        val item = items.getOrNull(index)
-        item?.itemContent?.invoke(
+        val item = items.getOrNull(index) ?: return
+        item.itemContent.invoke(
+            ItemScopeImpl(calculatedGeometry.distanceToCenter(index)),
             item.index,
-            calculatedGeometry.distanceToCenter(index),
         )
     }
 }
