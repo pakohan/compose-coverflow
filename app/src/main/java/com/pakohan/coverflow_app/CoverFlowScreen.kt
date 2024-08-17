@@ -19,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -115,13 +114,13 @@ fun CoverFlowScreen(
                 .background(Color.Black),
             state = state,
         ) {
-            items(items) { _, distanceToCenter, item ->
+            items(items) { _, item ->
                 Text(
                     modifier = Modifier
                         .requiredSize(with(LocalDensity.current) { (state.calculatedGeometry.itemWidth * 1.1f).toDp() })
-                        .graphicsLayer(
-                            rotationY = -55f * old.factor(distanceToCenter.toFloat()),
-                        )
+                        .coverGraphicsLayer {
+                            rotationY = -55f * old.factor(it.toFloat())
+                        }
                         .background(Color.White),
 
                     text = item,
