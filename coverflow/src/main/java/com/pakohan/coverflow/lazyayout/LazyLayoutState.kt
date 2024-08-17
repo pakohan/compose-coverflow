@@ -3,57 +3,75 @@ package com.pakohan.coverflow.lazyayout
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.layout.LazyLayoutItemProvider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.PointerInputChange
 
 @Composable
-fun rememberLazyLayoutState(itemWidth: Int) = remember { // remember to save the scrollOffset and items
-    LazyLayoutState(itemWidth)
-}
+fun rememberLazyLayoutState(geometry: Geometry = CoverFlowGeometry()) =
+    remember { // remember to save the scrollOffset and items
+        LazyLayoutState(geometry)
+    }
 
 data class LazyLayoutItemContent(
     val index: Int,
-    val itemContent: @Composable (Int) -> Unit,
+    val itemContent: @Composable (Int, Int) -> Unit,
 )
 
 interface CustomLazyListScope {
     fun items(
         amount: Int,
-        itemContent: @Composable (Int) -> Unit,
+        itemContent: @Composable (Int, Int) -> Unit,
+    )
+
+    fun <T> items(
+        items: List<T>,
+        itemContent: @Composable (Int, Int, T) -> Unit,
     )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Stable
 class LazyLayoutState(
-    val itemWidth: Int,
+    private val geometry: Geometry,
 ) : LazyLayoutItemProvider,
         CustomLazyListScope {
-    var scrollOffset = mutableIntStateOf(0)
+    private var scrollOffset by mutableIntStateOf(0)
+
     private val items = mutableListOf<LazyLayoutItemContent>()
 
-    fun onDrag(offset: Int) {
-        scrollOffset.intValue = (scrollOffset.intValue - offset).coerceAtLeast(0)
-            .coerceAtMost(items.size * itemWidth - itemWidth)
-    }
+    internal var containerSize: Dimension = Dimension.Zero
+        set(value) {
+            if (field != value) field = value
+        }
 
-    internal fun measure(
-        containerWidth: Int,
-    ) = Geometry(
-        scrollOffset.intValue,
-        containerWidth,
-        itemWidth,
-        itemCount,
-    )
+    val calculatedGeometry
+        get() = CalculatedGeometry(
+            scrollOffset = scrollOffset,
+            containerSize = containerSize,
+            geometry = geometry,
+            itemCount = itemCount,
+        )
+
+    internal fun onDrag(
+        change: PointerInputChange,
+        dragAmount: Offset,
+    ) {
+        change.consume()
+        scrollOffset = (scrollOffset - dragAmount.x.toInt()).coerceAtLeast(0)
+            .coerceAtMost(items.size * calculatedGeometry.itemWidth - calculatedGeometry.itemWidth)
+    }
 
     override val itemCount
         get() = items.size
 
     override fun items(
         amount: Int,
-        itemContent: @Composable (Int) -> Unit,
+        itemContent: @Composable (Int, Int) -> Unit,
     ) {
         for (i in 0..<amount) {
             items.add(
@@ -65,6 +83,17 @@ class LazyLayoutState(
         }
     }
 
+    override fun <T> items(
+        items: List<T>,
+        itemContent: @Composable (Int, Int, T) -> Unit,
+    ) = items(items.size) { index, distanceToCenter ->
+        itemContent(
+            index,
+            distanceToCenter,
+            items[index],
+        )
+    }
+
     @Composable
     override fun Item(
         index: Int,
@@ -72,68 +101,8 @@ class LazyLayoutState(
     ) {
         val item = items.getOrNull(index)
         item?.itemContent?.invoke(
-            index,
+            item.index,
+            calculatedGeometry.distanceToCenter(index),
         )
     }
-}
-
-@Immutable
-@Stable
-internal data class Geometry(
-    val scrollOffset: Int,
-    val containerWidth: Int,
-    val itemWidth: Int,
-    val amountItems: Int,
-) {
-    private val halfWidth = itemWidth / 2
-    private val spacerWidth = containerWidth / 2 - halfWidth
-    private val visibleSpacer = spacerWidth - scrollOffset
-    val firstVisibleItemX: Int
-        get() = if (visibleSpacer < 0) { // overscroll
-            visibleSpacer % itemWidth
-        } else {
-            visibleSpacer
-        }
-    val firstVisibleItemIndex: Int
-        get() = if (visibleSpacer < 0) {
-            (-visibleSpacer) / itemWidth
-        } else {
-            0
-        }
-    private val firstFullVisibleItemX: Int
-        get() = if (firstVisibleItemX < 0) {
-            itemWidth + firstVisibleItemX
-        } else {
-            firstVisibleItemX
-        }
-    private val spaceFromFirstFullVisibleItem = containerWidth - firstFullVisibleItemX
-    private val amountFullyVisibleItems = spaceFromFirstFullVisibleItem / itemWidth
-    private val spaceLeftAfterFullyVisibleItems = spaceFromFirstFullVisibleItem % itemWidth
-    private val lastItemFullyVisible = spaceLeftAfterFullyVisibleItems == 0
-    val lastVisibleItemIndex: Int
-        get() {
-            var result = firstVisibleItemIndex
-            result += amountFullyVisibleItems
-            if (!lastItemFullyVisible) {
-                result++
-            }
-            if (result > amountItems - 1) {
-                result = amountItems - 1
-            }
-            return result
-        }
-
-//    private val firstItemFullyVisible = firstVisibleItemX < 0
-//    val amountVisibleItems: Int
-//        get() {
-//            var result = 0
-//            if (!firstItemFullyVisible) {
-//                result++
-//            }
-//            result += amountFullyVisibleItems
-//            if (!lastItemFullyVisible) {
-//                result++
-//            }
-//            return result
-//        }
 }
