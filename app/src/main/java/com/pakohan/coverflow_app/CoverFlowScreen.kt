@@ -7,10 +7,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -18,9 +18,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.pakohan.coverflow.CoverFlow
 import com.pakohan.coverflow.CoverFlowParams
 import com.pakohan.coverflow.lazyayout.CustomLazyLayout
+import com.pakohan.coverflow.lazyayout.rememberLazyLayoutState
 import com.pakohan.coverflow.rememberCoverFlowState
 
 // This is for playing around with the parameters
@@ -40,6 +41,7 @@ fun CoverFlowScreen(
 
     Column(
         modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AnimatedVisibility(visible = showSettings) {
             CoverFlowSettings(
@@ -63,7 +65,7 @@ fun CoverFlowScreen(
             params = params,
         ) {
             items(
-                onSelectHandler = { item: String, index: Int ->
+                onSelectHandler = { _: String, index: Int ->
                     Log.d(
                         "CoverFlowScreen",
                         "onSelectHandler in scope: $index",
@@ -94,18 +96,40 @@ fun CoverFlowScreen(
         }
 
         CenterIndicator()
+
+        val state = rememberLazyLayoutState()
+
         CustomLazyLayout(
-            itemWidth = 100,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
+            state = state,
         ) {
-            items(20) {
+            items(3) { index, distanceToCenter ->
                 Text(
-                    text = "$it",
+                    text = "$index\n$distanceToCenter",
                     textAlign = TextAlign.Center,
                     modifier = Modifier
-                        .width(with(LocalDensity.current) { 100.toDp() })
+                        .fillMaxSize()
+                        .border(
+                            1.dp,
+                            Color.Black,
+                        )
+                        .padding(8.dp),
+                )
+            }
+            items(
+                listOf(
+                    "A",
+                    "B",
+                    "C",
+                ),
+            ) { _, distanceToCenter, item ->
+                Text(
+                    text = "$item\n$distanceToCenter",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
                         .border(
                             1.dp,
                             Color.Black,
@@ -119,7 +143,7 @@ fun CoverFlowScreen(
 }
 
 @Composable
-fun CenterIndicator(height: Dp = 16.dp) = Row(modifier = Modifier.height(16.dp)) {
+fun CenterIndicator(height: Dp = 16.dp) = Row(modifier = Modifier.height(height)) {
     Spacer(modifier = Modifier.weight(1f))
     VerticalDivider()
     Spacer(modifier = Modifier.weight(1f))
