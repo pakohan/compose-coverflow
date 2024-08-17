@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.unit.Constraints
@@ -29,9 +28,7 @@ fun CustomLazyLayout(
     rememberUpdatedState(content).also { state.apply(it.value) }
 
     LazyLayout(
-        modifier = modifier
-            .lazyLayoutPointerInput(state)
-            .clipToBounds(),
+        modifier = modifier.lazyLayoutPointerInput(state),
         itemProvider = {
             state
         },
