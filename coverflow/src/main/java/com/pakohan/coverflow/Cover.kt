@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
@@ -32,6 +33,19 @@ internal inline fun Cover(
             .width(with(LocalDensity.current) { geometry.coverOffset.toDp() })
             .onGloballyPositioned { coordinates ->
                 horizontalPosition = coordinates.positionInParent().x
+            }
+            .layout { measurable, constraints ->
+                val placeable = measurable.measure(constraints)
+                layout(
+                    placeable.width,
+                    placeable.height,
+                ) {
+                    placeable.placeRelative(
+                        0,
+                        0,
+                        zIndex = 1f,
+                    )
+                }
             }
             .calculatedZIndex(
                 geometry,
