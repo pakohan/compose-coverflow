@@ -1,56 +1,16 @@
 package com.pakohan.coverflow.lazyayout
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import kotlin.math.abs
 
-@Stable
-@Immutable
-data class Dimension(
-    val width: Int,
-    val height: Int,
-) {
-    val shortEdge: Int = if (width < height) width else height
-
-    companion object {
-        val Zero = Dimension(
-            0,
-            0,
-        )
-    }
-}
-
-interface Geometry {
-    fun itemWidth(containerSize: Dimension): Int
-
-    fun itemY(
-        containerSize: Dimension,
-        itemHeight: Int,
-    ): Int
-}
-
-class CoverFlowGeometry(private val itemSizeFactor: Float = .5f) : Geometry {
-    override fun itemWidth(containerSize: Dimension): Int = (containerSize.shortEdge * itemSizeFactor).toInt()
-
-    private fun halfWidth(containerSize: Dimension): Int {
-        return itemWidth(containerSize) / 2
-    }
-
-    override fun itemY(
-        containerSize: Dimension,
-        itemHeight: Int,
-    ) = containerSize.height / 2 + halfWidth(containerSize) - itemHeight
-}
-
-data class CalculatedGeometry(
+data class CalculatedLayoutInfo(
     val scrollOffset: Int,
     val containerSize: Dimension,
-    val geometry: Geometry,
+    val layoutInfo: LayoutInfo,
     val itemCount: Int,
 ) {
     private val halfContainerHeight = containerSize.height / 2
 
-    val itemWidth = geometry.itemWidth(containerSize)
+    val itemWidth = layoutInfo.itemWidth(containerSize)
 
     private val halfWidth = itemWidth / 2
 
@@ -66,7 +26,7 @@ data class CalculatedGeometry(
         visibleSpacer
     }
 
-    val firstVisibleItemIndex = if (visibleSpacer < 0) {
+    private val firstVisibleItemIndex = if (visibleSpacer < 0) {
         (-visibleSpacer) / itemWidth
     } else {
         0
@@ -88,7 +48,7 @@ data class CalculatedGeometry(
 
     private val selectedIndex = (scrollOffset + halfWidth) / itemWidth
 
-    val lastVisibleItemIndex: Int
+    private val lastVisibleItemIndex: Int
         get() {
             var result = firstVisibleItemIndex
             result += amountFullyVisibleItems
@@ -107,8 +67,10 @@ data class CalculatedGeometry(
 
     fun distanceToCenter(index: Int) = index * itemWidth - scrollOffset
 
-    internal fun y(itemHeight: Int) = geometry.itemY(
+    internal fun y(itemHeight: Int) = layoutInfo.itemY(
         containerSize,
         itemHeight,
     )
+
+    internal val indexRange: IntRange = firstVisibleItemIndex..lastVisibleItemIndex
 }
