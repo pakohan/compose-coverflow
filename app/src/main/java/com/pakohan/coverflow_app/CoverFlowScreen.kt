@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import com.pakohan.coverflow.CoverFlow
 import com.pakohan.coverflow.CoverFlowParams
 import com.pakohan.coverflow.OffsetLinearDistanceFactor
-import com.pakohan.coverflow.lazyayout.CustomLazyLayout
-import com.pakohan.coverflow.lazyayout.rememberLazyLayoutState
+import com.pakohan.coverflow.lazyayout.CenteredLazyRow
+import com.pakohan.coverflow.lazyayout.rememberCenteredLazyRowState
 import com.pakohan.coverflow.rememberCoverFlowState
 
 // This is for playing around with the parameters
@@ -100,14 +100,14 @@ fun CoverFlowScreen(
 
         CenterIndicator()
 
-        val state = rememberLazyLayoutState()
+        val state = rememberCenteredLazyRowState()
 
         val old = OffsetLinearDistanceFactor(
             200f,
             400f,
         )
 
-        CustomLazyLayout(
+        CenteredLazyRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -117,13 +117,24 @@ fun CoverFlowScreen(
             items(items) { _, item ->
                 Text(
                     modifier = Modifier
-                        .requiredSize(with(LocalDensity.current) { (state.calculatedGeometry.itemWidth * 1.1f).toDp() })
+                        .requiredSize(with(LocalDensity.current) { (state.calculatedLayoutInfo.itemWidth * 1.1f).toDp() })
                         .coverGraphicsLayer {
                             rotationY = -55f * old.factor(it.toFloat())
                         }
                         .background(Color.White),
 
                     text = item,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    modifier = Modifier
+                        .requiredSize(with(LocalDensity.current) { (state.calculatedLayoutInfo.itemWidth * 1.1f).toDp() })
+                        .mirrorGraphicsLayer {
+                            rotationY = -55f * old.factor(it.toFloat())
+                        }
+                        .background(Color.White),
+
+                    text = item.uppercase(),
                     textAlign = TextAlign.Center,
                 )
             }
