@@ -117,7 +117,7 @@ fun CoverFlowScreen(
             items(items) { _, item ->
                 Text(
                     modifier = Modifier
-                        .requiredSize(with(LocalDensity.current) { (state.calculatedLayoutInfo.itemWidth * 1.1f).toDp() })
+                        .requiredSize(with(LocalDensity.current) { (state.calculatedCenteredLazyRowLayoutInfo.itemWidth * 1.1f).toDp() })
                         .coverGraphicsLayer {
                             rotationY = -55f * old.factor(it.toFloat())
                         }
@@ -128,7 +128,7 @@ fun CoverFlowScreen(
                 )
                 Text(
                     modifier = Modifier
-                        .requiredSize(with(LocalDensity.current) { (state.calculatedLayoutInfo.itemWidth * 1.1f).toDp() })
+                        .requiredSize(with(LocalDensity.current) { (state.calculatedCenteredLazyRowLayoutInfo.itemWidth * 1.1f).toDp() })
                         .mirrorGraphicsLayer {
                             rotationY = -55f * old.factor(it.toFloat())
                         }

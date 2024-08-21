@@ -1,6 +1,6 @@
 package com.pakohan.coverflow.lazyayout
 
-interface CustomLazyListScope {
+interface CenteredLazyRowScope {
     fun items(
         amount: Int,
         itemContent: ItemFunc,
