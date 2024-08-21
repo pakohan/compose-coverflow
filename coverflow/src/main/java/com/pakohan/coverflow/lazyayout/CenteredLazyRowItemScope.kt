@@ -5,12 +5,12 @@ import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 
-interface ItemScope {
+interface CenteredLazyRowItemScope {
     fun Modifier.coverGraphicsLayer(block: GraphicsLayerScope.(Int) -> Unit): Modifier
     fun Modifier.mirrorGraphicsLayer(block: GraphicsLayerScope.(Int) -> Unit): Modifier
 }
 
-class ItemScopeImpl(private val distanceToCenter: Int) : ItemScope {
+class CenteredLazyRowItemScopeImpl(private val distanceToCenter: Int) : CenteredLazyRowItemScope {
     override fun Modifier.coverGraphicsLayer(block: GraphicsLayerScope.(Int) -> Unit): Modifier =
         this.graphicsLayer { block(distanceToCenter) }
 

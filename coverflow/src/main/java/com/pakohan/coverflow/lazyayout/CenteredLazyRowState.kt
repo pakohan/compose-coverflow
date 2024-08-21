@@ -19,22 +19,22 @@ import kotlin.math.floor
 import kotlin.math.sign
 
 @Composable
-fun rememberCenteredLazyRowState(layoutInfo: LayoutInfo = CoverFlowLayoutInfo()): CenteredLazyRowState {
+fun rememberCenteredLazyRowState(centeredLazyRowLayoutInfo: CenteredLazyRowLayoutInfo = CoverFlowLayoutInfo()): CenteredLazyRowState {
     val density = LocalDensity.current
     return remember { // remember to save the scrollOffset and items
         CenteredLazyRowState(
-            layoutInfo,
+            centeredLazyRowLayoutInfo,
             density,
         )
     }
 }
 
-typealias ItemFunc = @Composable ItemScope.(Int) -> Unit
-typealias ParameterItemFunc<T> = @Composable ItemScope.(Int, T) -> Unit
+typealias ItemFunc = @Composable CenteredLazyRowItemScope.(Int) -> Unit
+typealias ParameterItemFunc<T> = @Composable CenteredLazyRowItemScope.(Int, T) -> Unit
 
 @OptIn(ExperimentalFoundationApi::class)
 class CenteredLazyRowState(
-    private val layoutInfo: LayoutInfo,
+    private val centeredLazyRowLayoutInfo: CenteredLazyRowLayoutInfo,
     private val density: Density,
 ) {
     private var scrollOffset by mutableIntStateOf(0)
@@ -46,11 +46,11 @@ class CenteredLazyRowState(
         val itemContent: ItemFunc,
     )
 
-    val calculatedLayoutInfo
-        get() = CalculatedLayoutInfo(
+    val calculatedCenteredLazyRowLayoutInfo
+        get() = CalculatedCenteredLazyRowLayoutInfo(
             scrollOffset = scrollOffset,
             containerSize = containerSize,
-            layoutInfo = layoutInfo,
+            centeredLazyRowLayoutInfo = centeredLazyRowLayoutInfo,
             itemCount = items.size,
         )
 
@@ -65,13 +65,13 @@ class CenteredLazyRowState(
         ) {
             val item = items.getOrNull(index) ?: return
             item.itemContent(
-                ItemScopeImpl(calculatedLayoutInfo.distanceToCenter(index)),
+                CenteredLazyRowItemScopeImpl(calculatedCenteredLazyRowLayoutInfo.distanceToCenter(index)),
                 item.index,
             )
         }
     }
 
-    internal val lazyListScope = object : CustomLazyListScope {
+    internal val lazyListScope = object : CenteredLazyRowScope {
         override fun items(
             amount: Int,
             itemContent: ItemFunc,
@@ -113,10 +113,11 @@ class CenteredLazyRowState(
                 initialVelocity,
             ).absoluteValue
 
-            val estimatedNumberOfItemsInDecay = floor(offset.absoluteValue / calculatedLayoutInfo.itemWidth)
+            val estimatedNumberOfItemsInDecay =
+                floor(offset.absoluteValue / calculatedCenteredLazyRowLayoutInfo.itemWidth)
 
             val approachOffset =
-                estimatedNumberOfItemsInDecay * calculatedLayoutInfo.itemWidth - calculatedLayoutInfo.itemWidth
+                estimatedNumberOfItemsInDecay * calculatedCenteredLazyRowLayoutInfo.itemWidth - calculatedCenteredLazyRowLayoutInfo.itemWidth
             val finalDecayOffset = approachOffset.coerceAtLeast(0f)
             return if (finalDecayOffset == 0f) {
                 finalDecayOffset
@@ -129,8 +130,8 @@ class CenteredLazyRowState(
             var lowerBoundOffset = Float.NEGATIVE_INFINITY
             var upperBoundOffset = Float.POSITIVE_INFINITY
 
-            for (i in calculatedLayoutInfo.indexRange) {
-                val distance = calculatedLayoutInfo.distanceToCenter(i)
+            for (i in calculatedCenteredLazyRowLayoutInfo.indexRange) {
+                val distance = calculatedCenteredLazyRowLayoutInfo.distanceToCenter(i)
                 if (distance < 0 && distance > lowerBoundOffset) {
                     lowerBoundOffset = distance.toFloat()
                 } else if (distance > 0 && distance < upperBoundOffset) {

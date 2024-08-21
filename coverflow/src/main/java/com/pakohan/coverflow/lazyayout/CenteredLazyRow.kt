@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.Constraints
 fun CenteredLazyRow(
     modifier: Modifier = Modifier,
     state: CenteredLazyRowState = rememberCenteredLazyRowState(),
-    content: CustomLazyListScope.() -> Unit,
+    content: CenteredLazyRowScope.() -> Unit,
 ) {
     rememberUpdatedState(content).also { state.lazyListScope.apply(it.value) }
 
@@ -34,7 +34,7 @@ fun CenteredLazyRow(
             height = it.maxHeight,
         )
 
-        val calculatedGeometry = state.calculatedLayoutInfo
+        val calculatedGeometry = state.calculatedCenteredLazyRowLayoutInfo
         var x = calculatedGeometry.firstVisibleItemX
         val visibleItems = mutableListOf<RowElement>()
 

@@ -2,15 +2,15 @@ package com.pakohan.coverflow.lazyayout
 
 import kotlin.math.abs
 
-data class CalculatedLayoutInfo(
+data class CalculatedCenteredLazyRowLayoutInfo(
     val scrollOffset: Int,
     val containerSize: Dimension,
-    val layoutInfo: LayoutInfo,
+    val centeredLazyRowLayoutInfo: CenteredLazyRowLayoutInfo,
     val itemCount: Int,
 ) {
     private val halfContainerHeight = containerSize.height / 2
 
-    val itemWidth = layoutInfo.itemWidth(containerSize)
+    val itemWidth = centeredLazyRowLayoutInfo.itemWidth(containerSize)
 
     private val halfWidth = itemWidth / 2
 
@@ -67,7 +67,7 @@ data class CalculatedLayoutInfo(
 
     fun distanceToCenter(index: Int) = index * itemWidth - scrollOffset
 
-    internal fun y(itemHeight: Int) = layoutInfo.itemY(
+    internal fun y(itemHeight: Int) = centeredLazyRowLayoutInfo.itemY(
         containerSize,
         itemHeight,
     )

@@ -3,7 +3,7 @@ package com.pakohan.coverflow.lazyayout
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 
-interface LayoutInfo {
+interface CenteredLazyRowLayoutInfo {
     fun itemWidth(containerSize: Dimension): Int
 
     fun itemY(
@@ -12,7 +12,7 @@ interface LayoutInfo {
     ): Int
 }
 
-class CoverFlowLayoutInfo(private val itemSizeFactor: Float = .5f) : LayoutInfo {
+class CoverFlowLayoutInfo(private val itemSizeFactor: Float = .5f) : CenteredLazyRowLayoutInfo {
     override fun itemWidth(containerSize: Dimension): Int = (containerSize.shortEdge * itemSizeFactor).toInt()
 
     private fun halfWidth(containerSize: Dimension): Int {
