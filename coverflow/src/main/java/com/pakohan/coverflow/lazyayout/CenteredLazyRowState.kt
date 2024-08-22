@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import kotlin.math.absoluteValue
 import kotlin.math.floor
+import kotlin.math.round
 import kotlin.math.sign
 
 @Composable
@@ -29,8 +30,8 @@ fun rememberCenteredLazyRowState(centeredLazyRowLayoutInfo: CenteredLazyRowLayou
     }
 }
 
-typealias ItemFunc = @Composable CenteredLazyRowItemScope.(Int) -> Unit
-typealias ParameterItemFunc<T> = @Composable CenteredLazyRowItemScope.(Int, T) -> Unit
+typealias ItemFunc = @Composable CenteredLazyRowItemScope.(Int, Int) -> Unit
+typealias ParameterItemFunc<T> = @Composable CenteredLazyRowItemScope.(Int, Int, T) -> Unit
 
 @OptIn(ExperimentalFoundationApi::class)
 class CenteredLazyRowState(
@@ -54,6 +55,17 @@ class CenteredLazyRowState(
             itemCount = items.size,
         )
 
+    private fun consumeScrollDelta(delta: Float): Float {
+        var consumedDelta = round(delta).toInt()
+        if (consumedDelta > calculatedCenteredLazyRowLayoutInfo.remainingScrollOffset) {
+            consumedDelta = calculatedCenteredLazyRowLayoutInfo.remainingScrollOffset
+        }
+        scrollOffset -= consumedDelta
+        return consumedDelta.toFloat()
+    }
+
+    internal val scrollableState = ScrollableState(::consumeScrollDelta)
+
     internal val itemProvider = object : LazyLayoutItemProvider {
         override val itemCount
             get() = items.size
@@ -64,9 +76,11 @@ class CenteredLazyRowState(
             key: Any,
         ) {
             val item = items.getOrNull(index) ?: return
+            val distance = calculatedCenteredLazyRowLayoutInfo.distanceToCenter(index)
             item.itemContent(
-                CenteredLazyRowItemScopeImpl(calculatedCenteredLazyRowLayoutInfo.distanceToCenter(index)),
+                CenteredLazyRowItemScopeImpl(distance),
                 item.index,
+                distance,
             )
         }
     }
@@ -89,21 +103,14 @@ class CenteredLazyRowState(
         override fun <T> items(
             items: List<T>,
             itemContent: ParameterItemFunc<T>,
-        ) = items(items.size) {
+        ) = items(items.size) { index, distance ->
             itemContent(
-                it,
-                items[it],
+                index,
+                distance,
+                items[index],
             )
         }
     }
-
-    private fun consumeScrollDelta(delta: Float): Float {
-        val consumedDelta = floor(delta)
-        scrollOffset -= consumedDelta.toInt()
-        return consumedDelta
-    }
-
-    internal val scrollableState = ScrollableState(::consumeScrollDelta)
 
     internal val snapLayoutInfoProvider = object : SnapLayoutInfoProvider {
         override fun calculateApproachOffset(initialVelocity: Float): Float {
@@ -142,9 +149,9 @@ class CenteredLazyRowState(
             }
 
             var result = if (currentVelocity < 0) { // scrolling to the right, elements moving to the left
-                upperBoundOffset
-            } else {
                 lowerBoundOffset
+            } else {
+                upperBoundOffset
             }
             if (result == Float.NEGATIVE_INFINITY) {
                 result = upperBoundOffset

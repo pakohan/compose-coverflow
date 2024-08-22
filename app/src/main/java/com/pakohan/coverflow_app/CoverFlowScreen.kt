@@ -65,19 +65,21 @@ fun CoverFlowScreen(
             "The start parameter tells when the effects start being applied, the end parameter tells from which distance they should be fully applied",
         )
 
+        val firstState = rememberCoverFlowState(
+            onSelectHandler = {
+                Log.d(
+                    "CoverFlowScreen",
+                    "onSelectHandler outside of scope: $it",
+                )
+            },
+        )
+
         CenterIndicator()
         CoverFlow(
             modifier = Modifier
                 .background(Color.Black)
                 .weight(1f),
-            state = rememberCoverFlowState(
-                onSelectHandler = {
-                    Log.d(
-                        "CoverFlowScreen",
-                        "onSelectHandler outside of scope: $it",
-                    )
-                },
-            ),
+            state = firstState,
             params = params,
         ) {
             items(
@@ -114,7 +116,7 @@ fun CoverFlowScreen(
                 .background(Color.Black),
             state = state,
         ) {
-            items(items) { _, item ->
+            items(items) { _, distance, item ->
                 Text(
                     modifier = Modifier
                         .requiredSize(with(LocalDensity.current) { (state.calculatedCenteredLazyRowLayoutInfo.itemWidth * 1.1f).toDp() })
@@ -123,7 +125,7 @@ fun CoverFlowScreen(
                         }
                         .background(Color.White),
 
-                    text = item,
+                    text = "$distance\n$item",
                     textAlign = TextAlign.Center,
                 )
                 Text(
