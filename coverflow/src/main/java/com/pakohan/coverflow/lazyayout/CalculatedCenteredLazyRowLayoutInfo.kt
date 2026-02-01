@@ -18,7 +18,7 @@ data class CalculatedCenteredLazyRowLayoutInfo(
 
     private val visibleSpacer = spacerWidth - scrollOffset
 
-    internal val maximumScrollOffset = itemWidth * itemCount
+    internal val maximumScrollOffset = itemWidth * itemCount - itemWidth
 
     internal val remainingScrollOffset = maximumScrollOffset - scrollOffset
 

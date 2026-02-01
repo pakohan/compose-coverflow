@@ -1,8 +1,6 @@
 package com.pakohan.coverflow.lazyayout
 
-import androidx.compose.animation.core.DecayAnimationSpec
-import androidx.compose.animation.core.calculateTargetValue
-import androidx.compose.animation.splineBasedDecay
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
@@ -14,10 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
-import kotlin.math.absoluteValue
-import kotlin.math.floor
-import kotlin.math.round
-import kotlin.math.sign
 
 @Composable
 fun rememberCenteredLazyRowState(centeredLazyRowLayoutInfo: CenteredLazyRowLayoutInfo = CoverFlowLayoutInfo()): CenteredLazyRowState {
@@ -56,12 +50,17 @@ class CenteredLazyRowState(
         )
 
     private fun consumeScrollDelta(delta: Float): Float {
-        var consumedDelta = round(delta).toInt()
-        if (consumedDelta > calculatedCenteredLazyRowLayoutInfo.remainingScrollOffset) {
-            consumedDelta = calculatedCenteredLazyRowLayoutInfo.remainingScrollOffset
+        var consumedDelta = delta
+        if (consumedDelta > calculatedCenteredLazyRowLayoutInfo.remainingScrollOffset.toFloat()) {
+            consumedDelta = calculatedCenteredLazyRowLayoutInfo.remainingScrollOffset.toFloat()
         }
-        scrollOffset -= consumedDelta
-        return consumedDelta.toFloat()
+        scrollOffset -= consumedDelta.toInt()
+
+        Log.d(
+            "consumeScrollDelta",
+            "$delta -> $consumedDelta",
+        )
+        return consumedDelta
     }
 
     internal val scrollableState = ScrollableState(::consumeScrollDelta)
@@ -113,54 +112,51 @@ class CenteredLazyRowState(
     }
 
     internal val snapLayoutInfoProvider = object : SnapLayoutInfoProvider {
-        override fun calculateApproachOffset(initialVelocity: Float): Float {
-            val decayAnimationSpec: DecayAnimationSpec<Float> = splineBasedDecay(density)
-            val offset = decayAnimationSpec.calculateTargetValue(
-                0f,
-                initialVelocity,
-            ).absoluteValue
+        override fun calculateApproachOffset(initialVelocity: Float): Float = 0f
+//        {
+//            val decayAnimationSpec: DecayAnimationSpec<Float> = splineBasedDecay(density)
+//            val offset = decayAnimationSpec.calculateTargetValue(
+//                0f,
+//                initialVelocity,
+//            ).absoluteValue
+//
+//            val estimatedNumberOfItemsInDecay =
+//                floor(offset.absoluteValue / calculatedCenteredLazyRowLayoutInfo.itemWidth)
+//
+//            val approachOffset =
+//                estimatedNumberOfItemsInDecay * calculatedCenteredLazyRowLayoutInfo.itemWidth - calculatedCenteredLazyRowLayoutInfo.itemWidth
+//            val finalDecayOffset = approachOffset.coerceAtLeast(0f)
+//                .coerceAtMost(calculatedCenteredLazyRowLayoutInfo.maximumScrollOffset.toFloat())
+//            return if (finalDecayOffset == 0f) {
+//                finalDecayOffset
+//            } else {
+//                finalDecayOffset * initialVelocity.sign
+//            }
+//        }
 
-            val estimatedNumberOfItemsInDecay =
-                floor(offset.absoluteValue / calculatedCenteredLazyRowLayoutInfo.itemWidth)
-
-            val approachOffset =
-                estimatedNumberOfItemsInDecay * calculatedCenteredLazyRowLayoutInfo.itemWidth - calculatedCenteredLazyRowLayoutInfo.itemWidth
-            val finalDecayOffset = approachOffset.coerceAtLeast(0f)
-            return if (finalDecayOffset == 0f) {
-                finalDecayOffset
-            } else {
-                finalDecayOffset * initialVelocity.sign
-            }
-        }
-
+        // positive numbers lead back to the beginning
         override fun calculateSnappingOffset(currentVelocity: Float): Float {
-            var lowerBoundOffset = Float.NEGATIVE_INFINITY
-            var upperBoundOffset = Float.POSITIVE_INFINITY
-
-            for (i in calculatedCenteredLazyRowLayoutInfo.indexRange) {
-                val distance = calculatedCenteredLazyRowLayoutInfo.distanceToCenter(i)
-                if (distance < 0 && distance > lowerBoundOffset) {
-                    lowerBoundOffset = distance.toFloat()
-                } else if (distance > 0 && distance < upperBoundOffset) {
-                    upperBoundOffset = distance.toFloat()
-                } else if (distance == 0) {
-                    return 0f
+            val result = if (currentVelocity < 0) { // scrolling to the right, elements moving to the left
+                if (scrollOffset + calculatedCenteredLazyRowLayoutInfo.nextItemRightOffset.toFloat() > calculatedCenteredLazyRowLayoutInfo.maximumScrollOffset) {
+                    calculatedCenteredLazyRowLayoutInfo.nextItemLeftOffset.toFloat()
+                } else {
+                    -calculatedCenteredLazyRowLayoutInfo.nextItemRightOffset.toFloat()
                 }
-            }
-
-            var result = if (currentVelocity < 0) { // scrolling to the right, elements moving to the left
-                lowerBoundOffset
+            } else if (currentVelocity > 0) {
+                if (scrollOffset - calculatedCenteredLazyRowLayoutInfo.nextItemLeftOffset.toFloat() < 0) {
+                    -calculatedCenteredLazyRowLayoutInfo.nextItemRightOffset.toFloat()
+                } else {
+                    calculatedCenteredLazyRowLayoutInfo.nextItemLeftOffset.toFloat()
+                }
             } else {
-                upperBoundOffset
-            }
-            if (result == Float.NEGATIVE_INFINITY) {
-                result = upperBoundOffset
-            }
-            if (result == Float.POSITIVE_INFINITY) {
-                result = lowerBoundOffset
+                0f
             }
 
-            return result
+            Log.d(
+                "calculateSnappingOffset",
+                currentVelocity.toString(),
+            )
+            return 10f
         }
     }
 }
