@@ -112,7 +112,7 @@ class CenteredLazyRowState(
     }
 
     internal val snapLayoutInfoProvider = object : SnapLayoutInfoProvider {
-        override fun calculateApproachOffset(initialVelocity: Float): Float = 0f
+        override fun calculateApproachOffset(velocity: Float, decayOffset: Float): Float = 0f
 //        {
 //            val decayAnimationSpec: DecayAnimationSpec<Float> = splineBasedDecay(density)
 //            val offset = decayAnimationSpec.calculateTargetValue(
@@ -135,14 +135,14 @@ class CenteredLazyRowState(
 //        }
 
         // positive numbers lead back to the beginning
-        override fun calculateSnappingOffset(currentVelocity: Float): Float {
-            val result = if (currentVelocity < 0) { // scrolling to the right, elements moving to the left
+        override fun calculateSnapOffset(velocity: Float): Float {
+            val result = if (velocity < 0) { // scrolling to the right, elements moving to the left
                 if (scrollOffset + calculatedCenteredLazyRowLayoutInfo.nextItemRightOffset.toFloat() > calculatedCenteredLazyRowLayoutInfo.maximumScrollOffset) {
                     calculatedCenteredLazyRowLayoutInfo.nextItemLeftOffset.toFloat()
                 } else {
                     -calculatedCenteredLazyRowLayoutInfo.nextItemRightOffset.toFloat()
                 }
-            } else if (currentVelocity > 0) {
+            } else if (velocity > 0) {
                 if (scrollOffset - calculatedCenteredLazyRowLayoutInfo.nextItemLeftOffset.toFloat() < 0) {
                     -calculatedCenteredLazyRowLayoutInfo.nextItemRightOffset.toFloat()
                 } else {
@@ -154,7 +154,7 @@ class CenteredLazyRowState(
 
             Log.d(
                 "calculateSnappingOffset",
-                currentVelocity.toString(),
+                velocity.toString(),
             )
             return 10f
         }
