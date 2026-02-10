@@ -63,7 +63,7 @@ fun CoverFlow(
             item {
                 Spacer(modifier = Modifier.width(with(LocalDensity.current) { (geometry.spacerWidth).toDp() }))
             }
-
+            
             coverFlowScope.apply(content)
 
             item {
