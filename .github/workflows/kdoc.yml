@@ -23,7 +23,7 @@ jobs:
           distribution: 'temurin'
           cache: gradle
       - run: ./gradlew dokkaHtml
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v4
         with:
           path: 'coverflow/build/dokka/html'
