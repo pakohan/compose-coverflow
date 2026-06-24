@@ -30,7 +30,7 @@ fun rememberCoverFlowState(onSelectHandler: (Int) -> Unit = {}): CoverFlowState 
  * Exposes the scroll state.
  */
 class CoverFlowState internal constructor(
-    internal val lazyListState: LazyListState,
+    val lazyListState: LazyListState,
     private val coroutineScope: CoroutineScope,
     private val onSelectHandler: (Int) -> Unit = {},
 ) {
