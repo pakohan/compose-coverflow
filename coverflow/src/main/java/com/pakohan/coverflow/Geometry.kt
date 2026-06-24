@@ -83,7 +83,7 @@ internal class Geometry(
     @Stable
     internal fun effectFactor(distanceToCenter: Float): Float {
         return params.distanceFactor.factor(
-            distanceToCenter / coverSize,
+            if (coverSize == 0f) 0f else distanceToCenter / coverSize,
         )
     }
 

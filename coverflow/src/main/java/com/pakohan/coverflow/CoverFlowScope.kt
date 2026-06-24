@@ -67,7 +67,6 @@ internal class CoverFlowScopeImpl(
         contentType,
     ) {
         Cover(
-            onClickHandler = { coverFlowState.scrollToItem(it) },
             onSelectedHandler = { isSelected: Boolean ->
                 if (selectHandler(
                         it,
@@ -78,8 +77,14 @@ internal class CoverFlowScopeImpl(
                 }
             },
             geometry = geometry,
-        ) {
-            itemContent(it)
+        ) { distanceToCenter ->
+            InnerBox(
+                geometry = geometry,
+                distanceToCenter = distanceToCenter,
+                onClickHandler = { coverFlowState.scrollToItem(it) },
+            ) {
+                itemContent(it)
+            }
         }
     }
 
