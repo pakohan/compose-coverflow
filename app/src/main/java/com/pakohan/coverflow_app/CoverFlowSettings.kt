@@ -8,10 +8,6 @@ import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.pakohan.coverflow.CoverFlowParams
@@ -24,9 +20,10 @@ fun CoverFlowSettings(
     params: CoverFlowParams,
     onParamsUpdate: (CoverFlowParams) -> Unit,
 ) {
-    var distanceRange by remember {
-        mutableStateOf(.0f..0.5f)
-    }
+    // Derived from params instead of kept in a separate remember, so there is a single source of
+    // truth that survives configuration changes along with params.
+    val distanceFactor = params.distanceFactor as? OffsetLinearDistanceFactor ?: OffsetLinearDistanceFactor()
+    val distanceRange = distanceFactor.start..distanceFactor.end
 
     Column(modifier = modifier) {
         Text("Size: ${params.size.round(2)}")
@@ -47,12 +44,11 @@ fun CoverFlowSettings(
         RangeSlider(
             value = distanceRange,
             onValueChange = {
-                distanceRange = it
                 onParamsUpdate(
                     params.copy(
                         distanceFactor = OffsetLinearDistanceFactor(
-                            distanceRange.start,
-                            distanceRange.endInclusive,
+                            it.start,
+                            it.endInclusive,
                         ),
                     ),
                 )

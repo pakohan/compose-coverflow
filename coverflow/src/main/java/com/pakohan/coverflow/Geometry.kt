@@ -71,11 +71,6 @@ internal class Geometry(
         get() = containerCenter - coverOffset / 2
 
     @Stable
-    internal fun isSelected(horizontalPosition: Float): Boolean {
-        return distanceToCenter(horizontalPosition).toInt() == 0
-    }
-
-    @Stable
     internal fun distanceToCenter(horizontalPosition: Float): Float {
         return horizontalPosition + coverOffset * .5f - containerCenter
     }
