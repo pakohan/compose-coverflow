@@ -72,11 +72,11 @@ mavenPublishing {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.foundation.android)
-    implementation(libs.androidx.material3.android)
+    implementation(platform(libs.androidx.compose.bom))
+    // Modifier is part of the public API, so consumers need compose-ui on their classpath.
+    api(libs.androidx.ui)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -2,6 +2,14 @@ package com.pakohan.coverflow
 
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 
 /**
  * Receiver scope to add elements to the CoverFlow list.
@@ -55,45 +63,52 @@ internal class CoverFlowScopeImpl(
         itemContent(items[it])
     }
 
+    /**
+     * Number of covers added by previous [items] calls. Needed to translate the index local to one
+     * [items] call into the index within the whole cover flow.
+     */
+    private var coverCount = 0
+
     override fun items(
         count: Int,
         onSelectHandler: (index: Int) -> Unit,
         key: ((index: Int) -> Any)?,
         contentType: (index: Int) -> Any?,
         itemContent: @Composable (index: Int) -> Unit,
-    ) = lazyListScope.items(
-        count,
-        key,
-        contentType,
     ) {
-        Cover(
-            onClickHandler = { coverFlowState.scrollToItem(it) },
-            onSelectedHandler = { isSelected: Boolean ->
-                if (selectHandler(
-                        it,
-                        isSelected,
-                    )
-                ) {
-                    onSelectHandler(it)
-                }
-            },
-            geometry = geometry,
-        ) {
-            itemContent(it)
-        }
-    }
+        val firstCoverIndex = coverCount
+        coverCount += count
 
-    private fun selectHandler(
-        index: Int,
-        isSelected: Boolean,
-    ): Boolean {
-        if (!isSelected && index == coverFlowState.selectedIndex) {
-            coverFlowState.selectedIndex = -1
-        } else if (isSelected && index != coverFlowState.selectedIndex) {
-            coverFlowState.selectedIndex = index
-            return true
-        }
+        lazyListScope.items(
+            count,
+            key,
+            contentType,
+        ) { localIndex ->
+            val coverIndex = firstCoverIndex + localIndex
+            val coroutineScope = rememberCoroutineScope()
 
-        return false
+            // Side effects (calling the handler) belong in an effect, never in the composable
+            // body. snapshotFlow turns the derived selectedIndex into a Flow, and
+            // distinctUntilChanged + filter make sure the handler is only called once each time
+            // this cover becomes selected.
+            val currentOnSelectHandler by rememberUpdatedState(onSelectHandler)
+            LaunchedEffect(coverFlowState, coverIndex) {
+                snapshotFlow { coverFlowState.selectedIndex == coverIndex }
+                    .distinctUntilChanged()
+                    .filter { it }
+                    .collect { currentOnSelectHandler(localIndex) }
+            }
+
+            Cover(
+                geometry = geometry,
+                state = coverFlowState,
+                lazyIndex = coverIndex.toLazyIndex(),
+                onClickHandler = {
+                    coroutineScope.launch { coverFlowState.animateScrollToItem(coverIndex) }
+                },
+            ) {
+                itemContent(localIndex)
+            }
+        }
     }
 }
