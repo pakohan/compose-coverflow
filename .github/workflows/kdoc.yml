@@ -22,7 +22,7 @@ jobs:
           java-version: '22'
           distribution: 'temurin'
           cache: gradle
-      - run: ./gradlew dokkaHtml
+      - run: ./gradlew :coverflow:dokkaGenerate
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v5
         with:
