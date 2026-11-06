@@ -1,13 +1,21 @@
 version: 2
 updates:
+  # One PR for all Gradle updates: they share libs.versions.toml (separate PRs conflict with each
+  # other) and often depend on each other (e.g. a Compose update requiring a newer AGP).
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
       interval: "weekly"
-    rebase-strategy: "disabled"
+    groups:
+      gradle-dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    rebase-strategy: "disabled"
+    groups:
+      github-actions:
+        patterns:
+          - "*"

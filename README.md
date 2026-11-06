@@ -36,7 +36,11 @@ dependencies {
 }
 ```
 
-Requires `compileSdk` 37 and a JVM target of at least 11 (both required by Compose 1.12).
+Requirements:
+
+- `compileSdk` 37 and a JVM target of at least 11 (both required by Compose 1.12)
+- Kotlin 2.3 or newer (the library is built with Kotlin 2.4)
+- `minSdk` 24. The blur of the mirror effect needs API 31; below that the mirror is shown without blur.
 
 ## Usage
 
