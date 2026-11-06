@@ -2,7 +2,6 @@ package com.pakohan.coverflow
 
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.unit.IntSize
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
@@ -37,62 +36,57 @@ data class CoverFlowParams(
     val mirror: Boolean = true,
 ) : Parcelable
 
+/**
+ * Pure math: converts [CoverFlowParams] and the container size into pixel values.
+ *
+ * @Immutable tells the Compose compiler that instances never change after construction, so
+ * composables taking a Geometry can be skipped when the same instance is passed again. (@Stable on
+ * individual private getters and functions had no effect and was removed.)
+ */
 @Immutable
-@Stable
 internal class Geometry(
     internal val params: CoverFlowParams = CoverFlowParams(),
     private val size: IntSize = IntSize.Zero,
 ) {
-    @Stable
     private val shortEdge
         get() = min(
             size.width,
             size.height,
         )
 
-    @Stable
     private val containerCenter
         get() = size.width / 2
 
-    @Stable
     private val zoomDelta
         get() = 1 - params.zoom
 
-    @Stable
     internal val coverSize
         get() = shortEdge * params.size
 
-    @Stable
     internal val coverOffset
         get() = (coverSize * params.offset).toInt()
 
-    @Stable
     internal val spacerWidth
         get() = containerCenter - coverOffset / 2
 
-    @Stable
     internal fun distanceToCenter(horizontalPosition: Float): Float {
         return horizontalPosition + coverOffset * .5f - containerCenter
     }
 
-    @Stable
     internal fun effectFactor(distanceToCenter: Float): Float {
         return params.distanceFactor.factor(
             distanceToCenter / coverSize,
         )
     }
 
-    @Stable
     internal fun rotation(distanceToCenter: Float): Float {
         return -params.angle * effectFactor(distanceToCenter)
     }
 
-    @Stable
     internal fun scale(distanceToCenter: Float): Float {
         return 1 - zoomDelta * abs(effectFactor(distanceToCenter))
     }
 
-    @Stable
     internal fun translationX(distanceToCenter: Float): Float {
         return coverOffset * params.shift * effectFactor(distanceToCenter)
     }
