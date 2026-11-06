@@ -22,8 +22,10 @@ class OffsetLinearDistanceFactorTest {
 
         cases.forEach { (input, output) ->
             assertEquals(
+                "factor($input)",
+                output, // expected comes first
                 ldf.factor(input),
-                output,
+                1e-6f, // floats need a tolerance; also makes -0f equal 0f
             )
         }
     }

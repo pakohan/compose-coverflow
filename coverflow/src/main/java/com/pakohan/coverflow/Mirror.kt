@@ -2,6 +2,10 @@ package com.pakohan.coverflow
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,6 +39,11 @@ internal fun Mirror(
 ) {
     val coverSizeDp = with(LocalDensity.current) { coverSize.toDp() }
 
+    // The content is composed only once. Its drawing is recorded into this layer, and the mirror
+    // draws the same layer a second time. Composing content() twice would duplicate its state and
+    // side effects (e.g. loading an image twice).
+    val contentLayer = rememberGraphicsLayer()
+
     Column(
         modifier = modifier
             .padding(top = coverSizeDp) // necessary to push the mirrored immage down and keep the real one centered
@@ -44,16 +53,17 @@ internal fun Mirror(
         Box(
             propagateMinConstraints = true,
             modifier = Modifier
-                .weight(1f)
                 .fillMaxWidth()
-                .height(coverSizeDp),
+                .height(coverSizeDp)
+                .drawWithContent {
+                    contentLayer.record { this@drawWithContent.drawContent() }
+                    drawLayer(contentLayer)
+                },
         ) {
             content()
         }
-        Box(
-            propagateMinConstraints = true,
+        Spacer(
             modifier = Modifier
-                .weight(1f)
                 .fillMaxWidth()
                 .height(coverSizeDp)
                 .graphicsLayer(
@@ -84,10 +94,10 @@ internal fun Mirror(
                 .blur(
                     radiusX = 1.dp,
                     radiusY = 3.dp,
-                ),
-        ) {
-            content()
-        }
+                )
+                // draws the recorded content (where the second content() used to be composed)
+                .drawBehind { drawLayer(contentLayer) },
+        )
     }
 }
 
