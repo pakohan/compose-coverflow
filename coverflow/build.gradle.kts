@@ -72,11 +72,12 @@ mavenPublishing {
 }
 
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
+    // No Compose BOM here: it would be published with the library and force its versions onto all
+    // Compose artifacts of consuming apps. Explicit versions only set minimums for what we use.
     // Modifier is part of the public API, so consumers need compose-ui on their classpath.
-    api(libs.androidx.ui)
-    implementation(libs.androidx.foundation)
-    implementation(libs.androidx.material3)
+    api(libs.compose.ui)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
