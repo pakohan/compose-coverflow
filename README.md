@@ -28,6 +28,16 @@ Read the [KDoc](https://pakohan.github.io/compose-coverflow/coverflow/com.pakoha
 
 [![Watch a demonstration vide](https://img.youtube.com/vi/dfrZBEqYYs8/0.jpg)](https://www.youtube.com/watch?v=dfrZBEqYYs8)
 
+## Installation
+
+```kotlin
+dependencies {
+    implementation("io.github.pakohan:coverflow:<version>")
+}
+```
+
+Requires `compileSdk` 37 and a JVM target of at least 11 (both required by Compose 1.12).
+
 ## Usage
 
 ```kotlin
@@ -41,3 +51,33 @@ CoverFlow(modifier = Modifier.background(Color.Black)) {
     }
 }
 ```
+
+### Observing and controlling the selection
+
+```kotlin
+val state = rememberCoverFlowState()
+val scope = rememberCoroutineScope()
+
+// selectedIndex is snapshot state: reading it recomposes when the centered cover changes.
+// It is -1 while no cover is centered, e.g. during scrolling.
+Text("Selected: ${state.selectedIndex}")
+Button(onClick = { scope.launch { state.animateScrollToItem(0) } }) {
+    Text("Back to start")
+}
+
+CoverFlow(state = state) {
+    items(albums, key = { album -> album.id }) { album ->
+        AlbumCover(album)
+    }
+}
+```
+
+## Migrating from 1.x to 2.0
+
+- `CoverFlowState.scrollToItem(index)` is now a `suspend` function that jumps without animating.
+  For the previous animated behavior, call `animateScrollToItem(index)` from a coroutine,
+  e.g. `scope.launch { state.animateScrollToItem(index) }`.
+- `CoverFlowState.selectedIndex` is now observable snapshot state and read-only.
+- `items(items: List<T>, ...)`: `key` and `contentType` now receive the item instead of its index,
+  like `LazyListScope.items`.
+- With several `items(...)` blocks, selection and click-to-scroll now use the correct indices.

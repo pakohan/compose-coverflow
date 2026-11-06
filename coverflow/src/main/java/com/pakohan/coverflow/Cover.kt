@@ -1,6 +1,6 @@
 package com.pakohan.coverflow
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
@@ -28,6 +28,7 @@ internal fun Cover(
     geometry: Geometry,
     state: CoverFlowState,
     lazyIndex: Int,
+    selected: Boolean,
     onClickHandler: () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
@@ -69,7 +70,10 @@ internal fun Cover(
                 },
             propagateMinConstraints = true,
         ) {
-            val clickModifier = Modifier.clickable(
+            // selectable = clickable + the "selected" state for accessibility services, so
+            // TalkBack announces which cover is centered.
+            val clickModifier = Modifier.selectable(
+                selected = selected,
                 interactionSource = null,
                 indication = null,
                 onClick = onClickHandler,
